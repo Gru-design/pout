@@ -55,9 +55,32 @@ function pout_theme_setup() {
     // レスポンシブ埋め込み
     add_theme_support('responsive-embeds');
 
+    // ========================================
+    // ブロックエディタ（Gutenberg）サポート
+    // ========================================
+
     // エディタースタイル
     add_theme_support('editor-styles');
     add_editor_style('assets/css/editor-style.css');
+
+    // ワイド・全幅ブロック
+    add_theme_support('align-wide');
+
+    // ブロックライブラリスタイル
+    add_theme_support('wp-block-styles');
+
+    // カスタムスペーシング
+    add_theme_support('custom-spacing');
+
+    // カスタムユニット
+    add_theme_support('custom-units', 'px', 'rem', 'em', '%', 'vw', 'vh');
+
+    // リンク色設定
+    add_theme_support('custom-line-height');
+    add_theme_support('link-color');
+
+    // 余白設定
+    add_theme_support('appearance-tools');
 
     // ナビゲーションメニュー登録
     register_nav_menus(array(
@@ -113,6 +136,128 @@ function pout_enqueue_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'pout_enqueue_assets');
+
+/**
+ * ブロックエディタ用スタイル・スクリプト
+ */
+function pout_enqueue_block_editor_assets() {
+    // エディタ用追加スタイル
+    wp_enqueue_style(
+        'pout-editor-style',
+        POUT_THEME_URI . '/assets/css/editor-style.css',
+        array(),
+        POUT_THEME_VERSION
+    );
+}
+add_action('enqueue_block_editor_assets', 'pout_enqueue_block_editor_assets');
+
+/**
+ * ブロックエディタ用カラーパレット・設定
+ */
+function pout_block_editor_settings() {
+    // カラーパレット
+    add_theme_support('editor-color-palette', array(
+        array(
+            'name'  => __('Primary', 'pout-theme'),
+            'slug'  => 'primary',
+            'color' => '#2563eb',
+        ),
+        array(
+            'name'  => __('Primary Dark', 'pout-theme'),
+            'slug'  => 'primary-dark',
+            'color' => '#1d4ed8',
+        ),
+        array(
+            'name'  => __('Secondary', 'pout-theme'),
+            'slug'  => 'secondary',
+            'color' => '#64748b',
+        ),
+        array(
+            'name'  => __('Accent', 'pout-theme'),
+            'slug'  => 'accent',
+            'color' => '#f59e0b',
+        ),
+        array(
+            'name'  => __('Success', 'pout-theme'),
+            'slug'  => 'success',
+            'color' => '#10b981',
+        ),
+        array(
+            'name'  => __('Warning', 'pout-theme'),
+            'slug'  => 'warning',
+            'color' => '#f59e0b',
+        ),
+        array(
+            'name'  => __('Danger', 'pout-theme'),
+            'slug'  => 'danger',
+            'color' => '#ef4444',
+        ),
+        array(
+            'name'  => __('White', 'pout-theme'),
+            'slug'  => 'white',
+            'color' => '#ffffff',
+        ),
+        array(
+            'name'  => __('Light Gray', 'pout-theme'),
+            'slug'  => 'light-gray',
+            'color' => '#f8fafc',
+        ),
+        array(
+            'name'  => __('Dark', 'pout-theme'),
+            'slug'  => 'dark',
+            'color' => '#1a1a1a',
+        ),
+    ));
+
+    // フォントサイズ
+    add_theme_support('editor-font-sizes', array(
+        array(
+            'name' => __('Small', 'pout-theme'),
+            'size' => 14,
+            'slug' => 'small',
+        ),
+        array(
+            'name' => __('Normal', 'pout-theme'),
+            'size' => 16,
+            'slug' => 'normal',
+        ),
+        array(
+            'name' => __('Medium', 'pout-theme'),
+            'size' => 20,
+            'slug' => 'medium',
+        ),
+        array(
+            'name' => __('Large', 'pout-theme'),
+            'size' => 24,
+            'slug' => 'large',
+        ),
+        array(
+            'name' => __('X-Large', 'pout-theme'),
+            'size' => 32,
+            'slug' => 'x-large',
+        ),
+    ));
+
+    // グラデーションプリセット
+    add_theme_support('editor-gradient-presets', array(
+        array(
+            'name'     => __('Primary Gradient', 'pout-theme'),
+            'gradient' => 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+            'slug'     => 'primary-gradient',
+        ),
+        array(
+            'name'     => __('Accent Gradient', 'pout-theme'),
+            'gradient' => 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            'slug'     => 'accent-gradient',
+        ),
+        array(
+            'name'     => __('Dark Gradient', 'pout-theme'),
+            'gradient' => 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+            'slug'     => 'dark-gradient',
+        ),
+    ));
+}
+add_action('after_setup_theme', 'pout_block_editor_settings');
 
 /**
  * ウィジェットエリア登録
