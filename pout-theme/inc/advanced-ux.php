@@ -778,7 +778,8 @@ function pout_dark_mode_styles() {
     </style>
     <?php
 }
-add_action('wp_head', 'pout_dark_mode_styles', 2);
+// ダークモード機能は無効化（シンプル化のため）
+// add_action('wp_head', 'pout_dark_mode_styles', 2);
 
 /**
  * ダークモード切り替えスクリプト
@@ -897,4 +898,5 @@ function pout_dark_mode_script() {
     </script>
     <?php
 }
-add_action('wp_head', 'pout_dark_mode_script', 3);
+// ダークモード機能は無効化（シンプル化のため）
+// add_action('wp_head', 'pout_dark_mode_script', 3);

@@ -357,8 +357,14 @@ small {
 }
 
 .site-header.header-transparent .primary-menu a,
-.site-header.header-transparent .site-title {
+.site-header.header-transparent .site-title,
+.site-header.header-transparent .search-toggle,
+.site-header.header-transparent .hamburger span {
     color: var(--color-text-inverse);
+}
+
+.site-header.header-transparent .hamburger span {
+    background: var(--color-text-inverse);
 }
 
 .site-header.scrolled {
@@ -368,8 +374,13 @@ small {
 }
 
 .site-header.scrolled .primary-menu a,
-.site-header.scrolled .site-title {
+.site-header.scrolled .site-title,
+.site-header.scrolled .search-toggle {
     color: var(--color-text);
+}
+
+.site-header.scrolled .hamburger span {
+    background: var(--color-text);
 }
 
 .header-inner {
@@ -3550,6 +3561,16 @@ small {
 
     .menu-toggle {
         display: block;
+    }
+
+    /* ヘッダーのCTAボタンをモバイルで非表示 */
+    .btn-header {
+        display: none;
+    }
+
+    /* ヘッダーアクションの調整 */
+    .header-actions {
+        gap: var(--space-2);
     }
 
     .hero {
