@@ -196,6 +196,7 @@ $pout_modules = array(
     'inc/advanced-ux.php',   // UX強化
     'inc/extras.php',        // 便利ツール
     'inc/contact-logic.php', // フォーム処理
+    'inc/amp.php',           // AMP対応
 );
 
 foreach ($pout_modules as $module) {

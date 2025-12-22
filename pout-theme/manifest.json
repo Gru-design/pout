@@ -1,0 +1,109 @@
+{
+  "name": "Pout - キャリアコンサルティング",
+  "short_name": "Pout",
+  "description": "ハイクラス転職のための戦略的キャリアコンサルティング",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0F172A",
+  "orientation": "portrait-primary",
+  "lang": "ja",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "screenshots": [
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/wp-content/themes/pout-theme/assets/images/screenshot-narrow.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "お問い合わせ",
+      "short_name": "Contact",
+      "description": "お問い合わせフォームを開く",
+      "url": "/contact/",
+      "icons": [
+        {
+          "src": "/wp-content/themes/pout-theme/assets/images/icon-contact.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "ブログ",
+      "short_name": "Blog",
+      "description": "最新の記事を読む",
+      "url": "/media/",
+      "icons": [
+        {
+          "src": "/wp-content/themes/pout-theme/assets/images/icon-blog.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

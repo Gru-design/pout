@@ -499,3 +499,97 @@ function pout_output_gtm_noscript() {
     endif;
 }
 add_action('wp_body_open', 'pout_output_gtm_noscript');
+
+/**
+ * FAQ構造化データ出力
+ */
+function pout_output_faq_schema() {
+    // サービスLPページ（page-resumake）でのみ出力
+    if (!is_page_template('page-resumake.php')) {
+        return;
+    }
+
+    $faqs = array(
+        array(
+            'question' => '本当に無料で使えますか？',
+            'answer'   => 'はい、Freeプランは完全無料でご利用いただけます。クレジットカードの登録も不要です。月3件までの職務経歴書作成が可能です。',
+        ),
+        array(
+            'question' => '作成したデータは安全ですか？',
+            'answer'   => 'すべてのデータは暗号化して保存されます。また、第三者への提供は一切行いません。詳しくはプライバシーポリシーをご確認ください。',
+        ),
+        array(
+            'question' => '解約はいつでもできますか？',
+            'answer'   => 'はい、いつでも解約可能です。次回請求日前に解約すれば、追加料金は発生しません。解約後もFreeプランとしてご利用いただけます。',
+        ),
+        array(
+            'question' => 'スマートフォンでも使えますか？',
+            'answer'   => 'はい、スマートフォン・タブレットでも快適にご利用いただけます。通勤中や空き時間に職務経歴書を作成・編集できます。',
+        ),
+    );
+
+    $faq_items = array();
+    foreach ($faqs as $faq) {
+        $faq_items[] = array(
+            '@type'          => 'Question',
+            'name'           => $faq['question'],
+            'acceptedAnswer' => array(
+                '@type' => 'Answer',
+                'text'  => $faq['answer'],
+            ),
+        );
+    }
+
+    $schema = array(
+        '@context'   => 'https://schema.org',
+        '@type'      => 'FAQPage',
+        'mainEntity' => $faq_items,
+    );
+
+    echo '<script type="application/ld+json">' . "\n";
+    echo wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    echo "\n</script>\n";
+}
+add_action('wp_head', 'pout_output_faq_schema', 6);
+
+/**
+ * HowTo構造化データ出力（サービスLP用）
+ */
+function pout_output_howto_schema() {
+    if (!is_page_template('page-resumake.php')) {
+        return;
+    }
+
+    $schema = array(
+        '@context'    => 'https://schema.org',
+        '@type'       => 'HowTo',
+        'name'        => '職務経歴書の作成方法',
+        'description' => 'Resumakeを使って3ステップで職務経歴書を作成する方法',
+        'totalTime'   => 'PT5M',
+        'step'        => array(
+            array(
+                '@type'    => 'HowToStep',
+                'name'     => '経歴を入力',
+                'text'     => '基本情報と職務経歴を簡単入力。LinkedInからのインポートも可能。',
+                'position' => 1,
+            ),
+            array(
+                '@type'    => 'HowToStep',
+                'name'     => 'AIが生成',
+                'text'     => 'AIが入力情報を分析し、魅力的な文章を自動生成します。',
+                'position' => 2,
+            ),
+            array(
+                '@type'    => 'HowToStep',
+                'name'     => 'ダウンロード',
+                'text'     => 'PDF、Word形式で即座にダウンロード。すぐに応募開始！',
+                'position' => 3,
+            ),
+        ),
+    );
+
+    echo '<script type="application/ld+json">' . "\n";
+    echo wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    echo "\n</script>\n";
+}
+add_action('wp_head', 'pout_output_howto_schema', 7);

@@ -473,6 +473,26 @@ add_action('wp_footer', 'pout_screen_reader_info');
  */
 
 /**
+ * PWA マニフェストリンク出力
+ */
+function pout_pwa_manifest() {
+    $manifest_url = get_template_directory_uri() . '/manifest.json';
+    echo '<link rel="manifest" href="' . esc_url($manifest_url) . '">' . "\n";
+    echo '<meta name="theme-color" content="#0F172A">' . "\n";
+    echo '<meta name="apple-mobile-web-app-capable" content="yes">' . "\n";
+    echo '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' . "\n";
+    echo '<meta name="apple-mobile-web-app-title" content="Pout">' . "\n";
+
+    // Apple Touch Icons
+    $icon_sizes = array(180, 152, 144, 120, 114, 76, 72, 60, 57);
+    foreach ($icon_sizes as $size) {
+        $icon_url = get_template_directory_uri() . '/assets/images/apple-touch-icon-' . $size . 'x' . $size . '.png';
+        echo '<link rel="apple-touch-icon" sizes="' . $size . 'x' . $size . '" href="' . esc_url($icon_url) . '">' . "\n";
+    }
+}
+add_action('wp_head', 'pout_pwa_manifest', 1);
+
+/**
  * Service Worker 登録
  */
 function pout_register_service_worker() {
@@ -486,6 +506,20 @@ function pout_register_service_worker() {
             navigator.serviceWorker.register('<?php echo esc_url(get_template_directory_uri()); ?>/sw.js')
                 .then(function(registration) {
                     console.log('ServiceWorker registered:', registration.scope);
+
+                    // アップデートチェック
+                    registration.addEventListener('updatefound', function() {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', function() {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // 新しいバージョンが利用可能
+                                if (confirm('新しいバージョンが利用可能です。更新しますか？')) {
+                                    newWorker.postMessage('skipWaiting');
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    });
                 })
                 .catch(function(error) {
                     console.log('ServiceWorker registration failed:', error);
@@ -495,7 +529,7 @@ function pout_register_service_worker() {
     </script>
     <?php
 }
-// add_action('wp_footer', 'pout_register_service_worker');
+add_action('wp_footer', 'pout_register_service_worker');
 
 /**
  * ========================================
@@ -565,3 +599,302 @@ function pout_reading_progress() {
     <?php
 }
 add_action('wp_footer', 'pout_reading_progress');
+
+/**
+ * ========================================
+ * ダークモード
+ * ========================================
+ */
+
+/**
+ * ダークモード CSS変数
+ */
+function pout_dark_mode_styles() {
+    ?>
+    <style id="dark-mode-styles">
+    /* ダークモード CSS変数 */
+    :root {
+        --color-scheme: light;
+    }
+
+    [data-theme="dark"] {
+        --color-scheme: dark;
+        --color-primary: #60a5fa;
+        --color-primary-dark: #3b82f6;
+        --color-primary-light: #93c5fd;
+        --color-secondary: #94a3b8;
+        --color-accent: #fbbf24;
+        --color-text: #f1f5f9;
+        --color-text-light: #94a3b8;
+        --color-text-muted: #64748b;
+        --color-bg: #0f172a;
+        --color-bg-secondary: #1e293b;
+        --color-bg-tertiary: #334155;
+        --color-border: #334155;
+        --color-border-light: #475569;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+        color-scheme: dark;
+    }
+
+    /* ダークモード時のスタイル調整 */
+    [data-theme="dark"] body {
+        background-color: var(--color-bg);
+        color: var(--color-text);
+    }
+
+    [data-theme="dark"] .site-header {
+        background-color: var(--color-bg);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    [data-theme="dark"] .site-header.scrolled {
+        background-color: rgba(15, 23, 42, 0.95);
+    }
+
+    [data-theme="dark"] .btn-outline {
+        border-color: var(--color-border);
+        color: var(--color-text);
+    }
+
+    [data-theme="dark"] .btn-ghost {
+        color: var(--color-text);
+    }
+
+    [data-theme="dark"] .btn-ghost:hover {
+        background-color: var(--color-bg-secondary);
+    }
+
+    [data-theme="dark"] .post-card,
+    [data-theme="dark"] .card {
+        background-color: var(--color-bg-secondary);
+        border-color: var(--color-border);
+    }
+
+    [data-theme="dark"] .sidebar-widget {
+        background-color: var(--color-bg-secondary);
+        border-color: var(--color-border);
+    }
+
+    [data-theme="dark"] input,
+    [data-theme="dark"] textarea,
+    [data-theme="dark"] select {
+        background-color: var(--color-bg-secondary);
+        border-color: var(--color-border);
+        color: var(--color-text);
+    }
+
+    [data-theme="dark"] input:focus,
+    [data-theme="dark"] textarea:focus,
+    [data-theme="dark"] select:focus {
+        border-color: var(--color-primary);
+    }
+
+    [data-theme="dark"] .site-footer {
+        background-color: var(--color-bg-secondary);
+        border-top: 1px solid var(--color-border);
+    }
+
+    [data-theme="dark"] code,
+    [data-theme="dark"] pre {
+        background-color: var(--color-bg-tertiary);
+    }
+
+    [data-theme="dark"] .article-content img {
+        opacity: 0.9;
+    }
+
+    [data-theme="dark"] .skeleton {
+        background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+        background-size: 200% 100%;
+    }
+
+    /* ダークモード切り替えボタン */
+    .dark-mode-toggle {
+        position: relative;
+        width: 48px;
+        height: 24px;
+        background-color: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color var(--transition-base);
+        padding: 0;
+    }
+
+    .dark-mode-toggle::before {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 18px;
+        height: 18px;
+        background-color: var(--color-primary);
+        border-radius: 50%;
+        transition: transform var(--transition-base);
+    }
+
+    [data-theme="dark"] .dark-mode-toggle::before {
+        transform: translateX(24px);
+    }
+
+    .dark-mode-toggle-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        line-height: 1;
+    }
+
+    .dark-mode-toggle-icon.sun {
+        left: 6px;
+    }
+
+    .dark-mode-toggle-icon.moon {
+        right: 6px;
+    }
+
+    /* システム設定に従う（デフォルト） */
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+            --color-scheme: dark;
+            --color-primary: #60a5fa;
+            --color-primary-dark: #3b82f6;
+            --color-primary-light: #93c5fd;
+            --color-secondary: #94a3b8;
+            --color-accent: #fbbf24;
+            --color-text: #f1f5f9;
+            --color-text-light: #94a3b8;
+            --color-text-muted: #64748b;
+            --color-bg: #0f172a;
+            --color-bg-secondary: #1e293b;
+            --color-bg-tertiary: #334155;
+            --color-border: #334155;
+            --color-border-light: #475569;
+            color-scheme: dark;
+        }
+    }
+    </style>
+    <?php
+}
+add_action('wp_head', 'pout_dark_mode_styles', 2);
+
+/**
+ * ダークモード切り替えスクリプト
+ */
+function pout_dark_mode_script() {
+    ?>
+    <script>
+    (function() {
+        'use strict';
+
+        const STORAGE_KEY = 'pout-theme';
+        const THEME_DARK = 'dark';
+        const THEME_LIGHT = 'light';
+        const THEME_AUTO = 'auto';
+
+        // 保存されているテーマを取得
+        function getStoredTheme() {
+            try {
+                return localStorage.getItem(STORAGE_KEY);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // テーマを保存
+        function setStoredTheme(theme) {
+            try {
+                localStorage.setItem(STORAGE_KEY, theme);
+            } catch (e) {
+                // localStorage使用不可
+            }
+        }
+
+        // システムのカラースキームを取得
+        function getSystemTheme() {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEME_DARK : THEME_LIGHT;
+        }
+
+        // 現在のテーマを取得
+        function getCurrentTheme() {
+            const stored = getStoredTheme();
+            if (stored === THEME_DARK || stored === THEME_LIGHT) {
+                return stored;
+            }
+            return getSystemTheme();
+        }
+
+        // テーマを適用
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            if (theme === THEME_DARK) {
+                root.setAttribute('data-theme', THEME_DARK);
+            } else {
+                root.setAttribute('data-theme', THEME_LIGHT);
+            }
+
+            // メタタグのtheme-colorも更新
+            const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+            if (themeColorMeta) {
+                themeColorMeta.content = theme === THEME_DARK ? '#0f172a' : '#ffffff';
+            }
+        }
+
+        // テーマを切り替え
+        function toggleTheme() {
+            const current = getCurrentTheme();
+            const newTheme = current === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+            setStoredTheme(newTheme);
+            applyTheme(newTheme);
+            updateToggleButtons(newTheme);
+        }
+
+        // トグルボタンの状態を更新
+        function updateToggleButtons(theme) {
+            document.querySelectorAll('.dark-mode-toggle').forEach(function(btn) {
+                btn.setAttribute('aria-pressed', theme === THEME_DARK);
+                btn.setAttribute('aria-label', theme === THEME_DARK ? 'ライトモードに切り替え' : 'ダークモードに切り替え');
+            });
+        }
+
+        // 初期化
+        function init() {
+            // 即座にテーマを適用（FOUC防止）
+            applyTheme(getCurrentTheme());
+
+            // DOMContentLoaded後にトグルボタンを設定
+            document.addEventListener('DOMContentLoaded', function() {
+                // トグルボタンにイベントリスナーを追加
+                document.querySelectorAll('.dark-mode-toggle').forEach(function(btn) {
+                    btn.addEventListener('click', toggleTheme);
+                });
+                updateToggleButtons(getCurrentTheme());
+            });
+
+            // システム設定の変更を監視
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (!getStoredTheme() || getStoredTheme() === THEME_AUTO) {
+                    applyTheme(e.matches ? THEME_DARK : THEME_LIGHT);
+                    updateToggleButtons(e.matches ? THEME_DARK : THEME_LIGHT);
+                }
+            });
+        }
+
+        // グローバルに公開
+        window.poutDarkMode = {
+            toggle: toggleTheme,
+            setTheme: function(theme) {
+                setStoredTheme(theme);
+                applyTheme(theme === THEME_AUTO ? getSystemTheme() : theme);
+            },
+            getTheme: getCurrentTheme
+        };
+
+        init();
+    })();
+    </script>
+    <?php
+}
+add_action('wp_head', 'pout_dark_mode_script', 3);

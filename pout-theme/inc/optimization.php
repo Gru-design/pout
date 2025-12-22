@@ -466,3 +466,283 @@ function pout_remove_admin_bar_items($wp_admin_bar) {
     $wp_admin_bar->remove_node('comments');
 }
 add_action('admin_bar_menu', 'pout_remove_admin_bar_items', 999);
+
+/**
+ * ========================================
+ * Critical CSS（ファーストビュー最適化）
+ * ========================================
+ */
+
+/**
+ * Critical CSS をインライン出力
+ */
+function pout_critical_css() {
+    ?>
+    <style id="critical-css">
+    /* Critical CSS - ファーストビューに必要な最小限のスタイル */
+    *,*::before,*::after{box-sizing:border-box}
+    :root{
+        --color-primary:#2563eb;
+        --color-primary-dark:#1d4ed8;
+        --color-secondary:#64748b;
+        --color-accent:#f59e0b;
+        --color-text:#1a1a1a;
+        --color-text-light:#64748b;
+        --color-bg:#ffffff;
+        --color-bg-secondary:#f8fafc;
+        --font-sans:'Noto Sans JP',-apple-system,BlinkMacSystemFont,sans-serif;
+        --max-width:1200px;
+        --header-height:80px;
+        --spacing-4:1rem;
+        --spacing-6:1.5rem;
+        --spacing-8:2rem;
+        --radius-md:0.5rem;
+        --shadow-md:0 4px 6px -1px rgb(0 0 0/0.1);
+        --transition-base:200ms ease;
+    }
+    html{font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+    body{margin:0;font-family:var(--font-sans);color:var(--color-text);background:var(--color-bg)}
+    img,video{max-width:100%;height:auto;display:block}
+    a{color:var(--color-primary);text-decoration:none}
+    h1,h2,h3,h4,h5,h6{margin:0 0 1rem;line-height:1.3;font-weight:700}
+    p{margin:0 0 1rem}
+    .container{width:100%;max-width:var(--max-width);margin:0 auto;padding:0 var(--spacing-4)}
+    .site-header{position:fixed;top:0;left:0;right:0;height:var(--header-height);background:var(--color-bg);z-index:1000;transition:transform var(--transition-base),box-shadow var(--transition-base)}
+    .site-header.scrolled{box-shadow:var(--shadow-md)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:var(--header-height);padding:0 var(--spacing-4)}
+    .site-logo img{height:40px;width:auto}
+    .primary-menu{display:flex;gap:var(--spacing-6);list-style:none;margin:0;padding:0}
+    .primary-menu a{color:var(--color-text);font-weight:500;transition:color var(--transition-base)}
+    .primary-menu a:hover{color:var(--color-primary)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:0.75rem 1.5rem;font-weight:600;border-radius:var(--radius-md);transition:all var(--transition-base);cursor:pointer;border:none}
+    .btn-primary{background:var(--color-primary);color:#fff}
+    .btn-primary:hover{background:var(--color-primary-dark)}
+    .hero{padding:calc(var(--header-height) + var(--spacing-8)) 0 var(--spacing-8);min-height:80vh;display:flex;align-items:center}
+    .hero-title{font-size:clamp(2rem,5vw,3.5rem);margin-bottom:var(--spacing-4)}
+    .hero-description{font-size:1.125rem;color:var(--color-text-light);max-width:600px}
+    .mobile-menu-toggle{display:none;padding:0.5rem;background:none;border:none;cursor:pointer}
+    .hamburger{display:block;width:24px;height:2px;background:var(--color-text);position:relative}
+    .hamburger::before,.hamburger::after{content:'';position:absolute;width:24px;height:2px;background:var(--color-text);left:0}
+    .hamburger::before{top:-8px}
+    .hamburger::after{top:8px}
+    @media(max-width:768px){
+        .primary-menu{display:none}
+        .mobile-menu-toggle{display:block}
+        .hero-title{font-size:clamp(1.75rem,6vw,2.5rem)}
+    }
+    /* スケルトンローダー（FOUC防止） */
+    .skeleton-loading{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:skeleton 1.5s infinite}
+    @keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    </style>
+    <?php
+}
+add_action('wp_head', 'pout_critical_css', 0);
+
+/**
+ * メインCSSを非同期読み込み
+ */
+function pout_async_css($html, $handle, $href, $media) {
+    if (is_admin()) {
+        return $html;
+    }
+
+    // 非同期読み込み対象のスタイル
+    $async_styles = array('pout-main', 'pout-style');
+
+    if (in_array($handle, $async_styles)) {
+        // preloadで非同期読み込み、onloadでstylesheetに切り替え
+        $html = sprintf(
+            '<link rel="preload" href="%s" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">' . "\n" .
+            '<noscript><link rel="stylesheet" href="%s"></noscript>' . "\n",
+            esc_url($href),
+            esc_url($href)
+        );
+    }
+
+    return $html;
+}
+add_filter('style_loader_tag', 'pout_async_css', 10, 4);
+
+/**
+ * ========================================
+ * WebP 画像最適化
+ * ========================================
+ */
+
+/**
+ * 画像アップロード時にWebPを自動生成
+ */
+function pout_generate_webp_on_upload($metadata, $attachment_id) {
+    // WebP変換が可能かチェック
+    if (!function_exists('imagewebp')) {
+        return $metadata;
+    }
+
+    $upload_dir = wp_upload_dir();
+    $file_path = $upload_dir['basedir'] . '/' . $metadata['file'];
+
+    // 対応する画像形式のみ処理
+    $mime_type = get_post_mime_type($attachment_id);
+    $supported_types = array('image/jpeg', 'image/png');
+
+    if (!in_array($mime_type, $supported_types)) {
+        return $metadata;
+    }
+
+    // オリジナル画像をWebPに変換
+    pout_convert_to_webp($file_path);
+
+    // 各サイズの画像もWebPに変換
+    if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
+        $file_dir = dirname($file_path);
+        foreach ($metadata['sizes'] as $size => $size_data) {
+            $size_path = $file_dir . '/' . $size_data['file'];
+            pout_convert_to_webp($size_path);
+        }
+    }
+
+    return $metadata;
+}
+add_filter('wp_generate_attachment_metadata', 'pout_generate_webp_on_upload', 10, 2);
+
+/**
+ * 画像をWebPに変換
+ */
+function pout_convert_to_webp($source_path, $quality = 80) {
+    if (!file_exists($source_path)) {
+        return false;
+    }
+
+    $webp_path = preg_replace('/\.(jpe?g|png)$/i', '.webp', $source_path);
+
+    // すでにWebPが存在する場合はスキップ
+    if (file_exists($webp_path)) {
+        return $webp_path;
+    }
+
+    $mime_type = mime_content_type($source_path);
+    $image = null;
+
+    switch ($mime_type) {
+        case 'image/jpeg':
+            $image = imagecreatefromjpeg($source_path);
+            break;
+        case 'image/png':
+            $image = imagecreatefrompng($source_path);
+            // PNG透過を保持
+            imagepalettetotruecolor($image);
+            imagealphablending($image, true);
+            imagesavealpha($image, true);
+            break;
+        default:
+            return false;
+    }
+
+    if (!$image) {
+        return false;
+    }
+
+    $result = imagewebp($image, $webp_path, $quality);
+    imagedestroy($image);
+
+    return $result ? $webp_path : false;
+}
+
+/**
+ * 画像削除時にWebPも削除
+ */
+function pout_delete_webp_on_attachment_delete($attachment_id) {
+    $metadata = wp_get_attachment_metadata($attachment_id);
+
+    if (!$metadata || !isset($metadata['file'])) {
+        return;
+    }
+
+    $upload_dir = wp_upload_dir();
+    $file_path = $upload_dir['basedir'] . '/' . $metadata['file'];
+    $webp_path = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file_path);
+
+    if (file_exists($webp_path)) {
+        unlink($webp_path);
+    }
+
+    // 各サイズのWebPも削除
+    if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
+        $file_dir = dirname($file_path);
+        foreach ($metadata['sizes'] as $size_data) {
+            $size_webp = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file_dir . '/' . $size_data['file']);
+            if (file_exists($size_webp)) {
+                unlink($size_webp);
+            }
+        }
+    }
+}
+add_action('delete_attachment', 'pout_delete_webp_on_attachment_delete');
+
+/**
+ * pictureタグでWebPを優先表示
+ */
+function pout_webp_picture_tag($content) {
+    if (is_admin() || empty($content)) {
+        return $content;
+    }
+
+    // imgタグを検索
+    $pattern = '/<img([^>]+)src=["\']([^"\']+\.(jpe?g|png))["\']([^>]*)>/i';
+
+    $content = preg_replace_callback($pattern, function($matches) {
+        $before_src = $matches[1];
+        $src = $matches[2];
+        $ext = $matches[3];
+        $after_src = $matches[4];
+
+        // WebPパスを生成
+        $webp_src = preg_replace('/\.(jpe?g|png)$/i', '.webp', $src);
+
+        // WebPファイルの存在チェック（相対パスの場合）
+        $upload_dir = wp_upload_dir();
+        $webp_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $webp_src);
+
+        // WebPが存在しない場合は元のimgタグを返す
+        if (!file_exists($webp_path)) {
+            return $matches[0];
+        }
+
+        // pictureタグで包む
+        $picture = '<picture>';
+        $picture .= '<source srcset="' . esc_url($webp_src) . '" type="image/webp">';
+        $picture .= '<img' . $before_src . 'src="' . esc_url($src) . '"' . $after_src . '>';
+        $picture .= '</picture>';
+
+        return $picture;
+    }, $content);
+
+    return $content;
+}
+add_filter('the_content', 'pout_webp_picture_tag', 100);
+add_filter('post_thumbnail_html', 'pout_webp_picture_tag', 100);
+
+/**
+ * WebP対応ブラウザにはWebPを返す（.htaccess用ヘルパー）
+ */
+function pout_webp_htaccess_rules($rules) {
+    $webp_rules = <<<HTACCESS
+
+# WebP画像の配信
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_ACCEPT} image/webp
+    RewriteCond %{REQUEST_FILENAME} (.*)\.(jpe?g|png)$
+    RewriteCond %{REQUEST_FILENAME}.webp -f
+    RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=WEBP:1,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header append Vary Accept env=WEBP
+</IfModule>
+
+HTACCESS;
+
+    return $webp_rules . $rules;
+}
+// add_filter('mod_rewrite_rules', 'pout_webp_htaccess_rules');

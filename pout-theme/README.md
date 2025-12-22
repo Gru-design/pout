@@ -26,17 +26,19 @@ Pout Themeは、企業サイトとメディアサイトを一つのテーマで�
 pout-theme/
 ├── assets/
 │   ├── css/
-│   │   └── main.css          # メインスタイルシート (1,396行)
-│   └── js/
-│       └── scripts.js        # メインJavaScript (569行)
+│   │   └── main.css          # メインスタイルシート
+│   ├── js/
+│   │   └── scripts.js        # メインJavaScript
+│   └── images/               # PWAアイコン等
 ├── inc/
 │   ├── seo.php               # SEO・アナリティクス・構造化データ
 │   ├── shortcodes.php        # 11個のカスタムショートコード
 │   ├── cta.php               # CTA自動挿入エンジン
-│   ├── optimization.php      # パフォーマンス・セキュリティ最適化
-│   ├── advanced-ux.php       # UX拡張機能
+│   ├── optimization.php      # パフォーマンス・セキュリティ・WebP最適化
+│   ├── advanced-ux.php       # UX拡張・ダークモード
 │   ├── extras.php            # ユーティリティ・ウィジェット
-│   └── contact-logic.php     # お問い合わせフォーム処理
+│   ├── contact-logic.php     # お問い合わせフォーム処理
+│   └── amp.php               # AMP対応
 ├── front-page.php            # コーポレートトップページ
 ├── home.php                  # ブログ/メディアトップ
 ├── single.php                # 記事詳細ページ
@@ -48,6 +50,8 @@ pout-theme/
 ├── footer.php                # フッターテンプレート
 ├── functions.php             # テーマ初期化・コア機能
 ├── style.css                 # テーマメタデータ
+├── manifest.json             # PWAマニフェスト
+├── sw.js                     # Service Worker
 └── README.md                 # このファイル
 ```
 
@@ -427,6 +431,22 @@ document.addEventListener('DOMContentLoaded', () => {
 - 関連記事
 - 人気記事ウィジェット
 - アクセシビリティ対応
+- ダークモード（システム設定連動）
+
+### モダン対応
+- PWA (Progressive Web App)
+  - manifest.json
+  - Service Worker（オフラインキャッシュ）
+  - ホーム画面追加対応
+- AMP (Accelerated Mobile Pages)
+  - 投稿ページAMP対応
+  - amp-img, amp-iframe, amp-youtube変換
+  - AMPアナリティクス
+- Critical CSS（ファーストビュー最適化）
+- WebP自動変換
+  - アップロード時自動生成
+  - pictureタグ自動出力
+- FAQ/HowTo構造化データ
 
 ### 収益化
 - 11個の収益化ショートコード
