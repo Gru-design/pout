@@ -94,8 +94,29 @@ pout-theme/
   - Article
   - WebPage
   - BreadcrumbList
+  - FAQPage（サービスLPページ）
+  - HowTo（サービスLPページ）
+  - Person（E-E-A-T著者情報）
+  - Speakable（AI検索/音声検索対応）
 - Google Analytics 4 対応
 - Google Tag Manager 対応
+
+**E-E-A-T著者プロフィール強化:**
+- ユーザープロフィールに追加フィールド
+  - 役職・肩書き
+  - 専門分野（カンマ区切り）
+  - 資格・認定（複数行）
+  - 経験年数
+  - 所属組織
+  - LinkedIn URL
+  - X (Twitter) URL
+- 記事ページに著者構造化データ（Person Schema）を自動出力
+- `knowsAbout`, `hasCredential`, `worksFor`, `sameAs` などE-E-A-T対応プロパティ
+
+**Speakable構造化データ:**
+- 記事ページにspeakable属性を自動出力
+- Google AI Overview / 音声検索での読み上げ対象指定
+- cssSelector: `.article-title`, `.article-summary`, `.definition-box`, `.key-takeaway`
 
 **カスタマイザー設定:**
 - Google Analytics ID
@@ -124,6 +145,44 @@ pout-theme/
 | `[pout_accordion_item]` | アコーディオン項目（子） | `title` |
 | `[pout_profile]` | プロフィールカード | `name`, `image`, `bio` |
 | `[pout_posts]` | 記事一覧 | `count`, `columns` (1-4) |
+
+### Featured Snippet最適化ショートコード（inc/seo.php）
+
+Featured Snippetおよび AI検索最適化用のショートコード:
+
+| ショートコード | 用途 | パラメータ例 |
+|---------------|------|-------------|
+| `[definition]` | 定義ボックス（〇〇とは？） | `term="SEO"` |
+| `[key_takeaway]` | キーポイント/要約ボックス | `title`, `type` (summary/checklist/steps) |
+| `[article_summary]` | 記事サマリー | - |
+| `[comparison_table]` | 比較テーブル（パイプ区切り） | - |
+
+**使用例:**
+
+```
+[definition term="SEO"]
+検索エンジン最適化（Search Engine Optimization）の略で、
+Webサイトを検索結果で上位表示させるための施策です。
+[/definition]
+
+[key_takeaway title="この記事でわかること" type="checklist"]
+- SEOの基本概念
+- 具体的な対策方法
+- 効果測定の方法
+[/key_takeaway]
+
+[article_summary]
+この記事ではSEOの基礎から応用まで、
+初心者にもわかりやすく解説しています。
+[/article_summary]
+
+[comparison_table]
+項目|プランA|プランB|プランC
+月額料金|無料|1,000円|3,000円
+機能|基本|標準|フル
+サポート|なし|メール|電話+メール
+[/comparison_table]
+```
 
 ---
 
@@ -407,6 +466,16 @@ document.addEventListener('DOMContentLoaded', () => {
 - Twitter Card
 - パンくずスキーマ
 - 自動見出しID
+- E-E-A-T著者プロフィール強化
+  - カスタム著者フィールド（役職、専門分野、資格、経験年数）
+  - Person Schema自動出力
+- AI検索対応
+  - Speakable構造化データ
+  - Google AI Overview / SGE最適化
+- Featured Snippet最適化
+  - 定義ボックスショートコード
+  - キーポイント/要約ショートコード
+  - 比較テーブルショートコード
 
 ### セキュリティ
 - CSRF保護
