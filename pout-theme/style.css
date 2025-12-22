@@ -3,8 +3,8 @@ Theme Name: Pout Theme
 Theme URI: https://pout.co.jp/
 Author: Pout Inc.
 Author URI: https://pout.co.jp/
-Description: コーポレート＆メディアハイブリッドテーマ - 高速・SEO最適化・収益化対応
-Version: 1.0.0
+Description: キャリアコンサルティング＆MEDECHECKサービス - 高速・SEO最適化・収益化対応のコーポレート＆メディアハイブリッドテーマ
+Version: 2.0.0
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 8.0
@@ -13,5 +13,39 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: pout-theme
 Tags: corporate, blog, seo-ready, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
 
-Pout Theme - Professional WordPress Theme for Corporate & Media Sites
+Pout Theme - Professional WordPress Theme for Career Consulting & MEDECHECK Service
+AIじゃない。目で、チェック。
 */
+
+/*
+ * Note: Main styles are in assets/css/main.css
+ * This file contains only the WordPress theme header
+ * and minimal reset styles for fallback
+ */
+
+/* Basic Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
