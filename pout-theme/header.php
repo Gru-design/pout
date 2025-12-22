@@ -71,6 +71,12 @@ $is_transparent = in_array($page_type, array('corporate', 'service'), true);
                 </button>
             <?php endif; ?>
 
+            <!-- ダークモード切り替え -->
+            <button class="dark-mode-toggle" aria-label="<?php esc_attr_e('ダークモードに切り替え', 'pout-theme'); ?>" aria-pressed="false">
+                <span class="dark-mode-toggle-icon sun" aria-hidden="true">☀️</span>
+                <span class="dark-mode-toggle-icon moon" aria-hidden="true">🌙</span>
+            </button>
+
             <!-- モバイルメニュートグル -->
             <button class="menu-toggle" aria-controls="mobile-menu" aria-expanded="false">
                 <span class="hamburger">
