@@ -11,7 +11,6 @@
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', function() {
-        initDarkMode();
         initMobileMenu();
         initSearchOverlay();
         initBackToTop();
@@ -28,52 +27,6 @@
         initScrollAnimations();
         initLazyLoad();
     });
-
-    /**
-     * Dark Mode Toggle
-     */
-    function initDarkMode() {
-        var darkModeToggle = document.querySelector('.dark-mode-toggle');
-        var body = document.body;
-
-        if (!darkModeToggle) return;
-
-        // Check for saved preference or system preference
-        var savedTheme = localStorage.getItem('pout-theme');
-        var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-            body.setAttribute('data-theme', 'dark');
-            darkModeToggle.setAttribute('aria-pressed', 'true');
-        }
-
-        darkModeToggle.addEventListener('click', function() {
-            var isDark = body.getAttribute('data-theme') === 'dark';
-
-            if (isDark) {
-                body.setAttribute('data-theme', 'light');
-                localStorage.setItem('pout-theme', 'light');
-                this.setAttribute('aria-pressed', 'false');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('pout-theme', 'dark');
-                this.setAttribute('aria-pressed', 'true');
-            }
-        });
-
-        // Listen for system theme changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-            if (!localStorage.getItem('pout-theme')) {
-                if (e.matches) {
-                    body.setAttribute('data-theme', 'dark');
-                    darkModeToggle.setAttribute('aria-pressed', 'true');
-                } else {
-                    body.setAttribute('data-theme', 'light');
-                    darkModeToggle.setAttribute('aria-pressed', 'false');
-                }
-            }
-        });
-    }
 
     /**
      * Mobile Menu Toggle
