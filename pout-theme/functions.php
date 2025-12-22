@@ -260,6 +260,50 @@ function pout_block_editor_settings() {
 add_action('after_setup_theme', 'pout_block_editor_settings');
 
 /**
+ * Gutenberg REST API サポート確保
+ * エディタが正常に動作するために必要なREST APIを保護
+ */
+function pout_ensure_gutenberg_rest_api($result) {
+    // すでにエラーがある場合はそのまま返す
+    if (is_wp_error($result)) {
+        return $result;
+    }
+
+    // 管理画面からのリクエストは常に許可
+    if (is_admin()) {
+        return $result;
+    }
+
+    // ログインユーザーは常に許可
+    if (is_user_logged_in()) {
+        return $result;
+    }
+
+    return $result;
+}
+add_filter('rest_authentication_errors', 'pout_ensure_gutenberg_rest_api', 1);
+
+/**
+ * ブロックエディタで必要なメタデータを登録
+ */
+function pout_register_post_meta() {
+    // 投稿タイプごとにメタデータを登録（REST APIで利用可能にする）
+    $post_types = array('post', 'page', 'tools');
+
+    foreach ($post_types as $post_type) {
+        register_post_meta($post_type, '_wp_page_template', array(
+            'show_in_rest' => true,
+            'single'       => true,
+            'type'         => 'string',
+            'auth_callback' => function() {
+                return current_user_can('edit_posts');
+            },
+        ));
+    }
+}
+add_action('init', 'pout_register_post_meta');
+
+/**
  * ウィジェットエリア登録
  */
 function pout_widgets_init() {
