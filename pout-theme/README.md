@@ -1,0 +1,461 @@
+# Pout Theme
+
+コーポレート&メディアハイブリッド WordPress テーマ - 高速・SEO最適化・収益化対応
+
+## 概要
+
+Pout Themeは、企業サイトとメディアサイトを一つのテーマで運用できるハイブリッドWordPressテーマです。SEO最適化、パフォーマンス向上、セキュリティ強化、収益化支援機能を備えています。
+
+### 基本情報
+
+| 項目 | 内容 |
+|------|------|
+| テーマ名 | Pout Theme |
+| バージョン | 1.0.0 |
+| 作者 | Pout Inc. |
+| 必須PHP | 8.0以上 |
+| 必須WordPress | 6.0以上 |
+| 動作確認済み | WordPress 6.4 |
+| ライセンス | GPL v2 or later |
+
+---
+
+## ディレクトリ構成
+
+```
+pout-theme/
+├── assets/
+│   ├── css/
+│   │   └── main.css          # メインスタイルシート (1,396行)
+│   └── js/
+│       └── scripts.js        # メインJavaScript (569行)
+├── inc/
+│   ├── seo.php               # SEO・アナリティクス・構造化データ
+│   ├── shortcodes.php        # 11個のカスタムショートコード
+│   ├── cta.php               # CTA自動挿入エンジン
+│   ├── optimization.php      # パフォーマンス・セキュリティ最適化
+│   ├── advanced-ux.php       # UX拡張機能
+│   ├── extras.php            # ユーティリティ・ウィジェット
+│   └── contact-logic.php     # お問い合わせフォーム処理
+├── front-page.php            # コーポレートトップページ
+├── home.php                  # ブログ/メディアトップ
+├── single.php                # 記事詳細ページ
+├── page-contact.php          # お問い合わせページ
+├── page-resumake.php         # サービスランディングページ
+├── archive-tools.php         # ツール/エコシステム一覧
+├── index.php                 # フォールバックアーカイブ
+├── header.php                # ヘッダーテンプレート
+├── footer.php                # フッターテンプレート
+├── functions.php             # テーマ初期化・コア機能
+├── style.css                 # テーマメタデータ
+└── README.md                 # このファイル
+```
+
+---
+
+## テンプレートファイル
+
+### メインテンプレート
+
+| ファイル | 用途 | 主な機能 |
+|---------|------|----------|
+| `front-page.php` | コーポレートトップ | ヒーロー、サービス紹介、実績、CTA |
+| `home.php` | ブログ/メディアトップ | フィーチャード記事、記事グリッド、サイドバー |
+| `single.php` | 記事詳細 | 目次自動生成、シェアボタン、関連記事 |
+| `page-contact.php` | お問い合わせ | フォーム、バリデーション、スパム対策 |
+| `page-resumake.php` | サービスLP | Before/After、料金表、FAQ、お客様の声 |
+| `archive-tools.php` | ツール一覧 | カテゴリフィルター、ステータスバッジ |
+| `index.php` | アーカイブ | 汎用一覧、検索結果表示 |
+
+### 共通テンプレート
+
+| ファイル | 用途 | 主な機能 |
+|---------|------|----------|
+| `header.php` | ヘッダー | ページタイプ別の条件分岐ヘッダー |
+| `footer.php` | フッター | ウィジェットエリア、フローティングシェア |
+
+---
+
+## インクルードファイル (inc/)
+
+### inc/seo.php - SEO・アナリティクス
+
+**機能:**
+- メタタグ出力 (description, robots, canonical)
+- OGP (Open Graph Protocol) タグ
+- Twitter Card メタデータ
+- Schema.org 構造化データ
+  - Organization
+  - WebSite
+  - Article
+  - WebPage
+  - BreadcrumbList
+- Google Analytics 4 対応
+- Google Tag Manager 対応
+
+**カスタマイザー設定:**
+- Google Analytics ID
+- GTM ID
+- デフォルトOGP画像
+- Twitterアカウント
+- 会社情報 (名前、電話、メール、住所)
+- SNSリンク (Twitter, Facebook, LinkedIn, YouTube, Instagram)
+
+---
+
+### inc/shortcodes.php - ショートコード
+
+11個の収益化・コンテンツ装飾用ショートコードを提供:
+
+| ショートコード | 用途 | パラメータ例 |
+|---------------|------|-------------|
+| `[pout_button]` | スタイル付きボタン | `url`, `text`, `style` |
+| `[pout_cta]` | CTAボックス | `type` (default/highlight/minimal) |
+| `[pout_affiliate]` | アフィリエイト商品ボックス | `image`, `title`, `rating`, `url` |
+| `[pout_comparison]` | 商品比較表（親） | - |
+| `[pout_comparison_item]` | 比較項目（子） | `name`, `price`, `features` |
+| `[pout_balloon]` | 吹き出し | `name`, `image`, `position` |
+| `[pout_notice]` | 通知ボックス | `type` (info/success/warning/error) |
+| `[pout_accordion]` | アコーディオン（親） | - |
+| `[pout_accordion_item]` | アコーディオン項目（子） | `title` |
+| `[pout_profile]` | プロフィールカード | `name`, `image`, `bio` |
+| `[pout_posts]` | 記事一覧 | `count`, `columns` (1-4) |
+
+---
+
+### inc/cta.php - CTA自動挿入
+
+**機能:**
+- 記事内H2見出し後への自動CTA挿入
+- 記事末尾へのCTA挿入
+- 4種類のCTAスタイル (default, minimal, highlight, banner)
+- 投稿別の無効化オプション (メタボックス)
+- カテゴリ除外機能
+
+**カスタマイザー設定:**
+- CTA有効/無効
+- 挿入位置 (何番目のH2見出し後か)
+- CTAテキスト、説明文
+- ボタンテキスト、URL
+- CTA画像
+- 除外カテゴリID
+
+---
+
+### inc/optimization.php - パフォーマンス・セキュリティ
+
+**パフォーマンス最適化:**
+- 不要なWordPressヘッダー削除
+- アセットからクエリ文字列削除
+- スクリプトのdefer読み込み
+- CSSプリロード
+- フォントプリロード
+- 画像/iframeのネイティブLazy Loading
+- HTTP/2 Server Pushヘッダー
+
+**セキュリティ対策:**
+- セキュリティヘッダー
+  - X-Content-Type-Options
+  - X-Frame-Options
+  - X-XSS-Protection
+  - Referrer-Policy
+  - Permissions-Policy
+- XML-RPC無効化
+- REST API制限 (非認証ユーザーのusersエンドポイント遮断)
+- ログイン試行制限 (15分間に5回まで)
+- 汎用ログインエラーメッセージ
+- ファイルエディタ無効化
+- Pingback無効化
+- コメントHTML制限
+- アップロードMIMEタイプ制限
+- 投稿リビジョン制限 (5件)
+- 自動保存間隔調整 (120秒)
+
+---
+
+### inc/advanced-ux.php - UX拡張
+
+**プリフェッチ/プリレンダー:**
+- DNSプリフェッチ (Google Fonts, Analytics, GTM)
+- ホバー時リンクプリフェッチ (Instant.page方式)
+
+**スクロール体験:**
+- スムーズスクロール (motion-reduced対応)
+- スクロール位置復元
+- ページ遷移プログレスバー
+- 記事読了プログレスバー
+- スクロール時ヘッダー縮小
+
+**ローディング:**
+- スケルトンローダースタイル
+- 画像出現アニメーション
+
+**アクセシビリティ:**
+- focus-visibleスタイル
+- キーボードフォーカスアウトライン
+- タッチターゲット拡大
+- スクリーンリーダー用ライブリージョン
+
+**パフォーマンス計測:**
+- Core Web Vitals測定 (LCP, FID, CLS)
+- 読了率GA4イベント送信
+
+---
+
+### inc/extras.php - ユーティリティ
+
+**PVカウンター:**
+- 投稿閲覧数トラッキング (ボット/管理者除外)
+- 閲覧数フォーマット (M/K表記)
+
+**人気記事ウィジェット:**
+- カスタムWP_Widgetクラス
+- ランクバッジ、サムネイル、閲覧数表示
+
+**その他:**
+- 自動見出しID生成
+- 関連記事取得関数
+- はてなブックマーク数取得
+- 外部リンク処理 (target="_blank", rel="noopener noreferrer")
+- Twitter埋め込みLazy Loading
+- ログインページロゴカスタマイズ
+- 管理バーカスタマイズ
+- パフォーマンス統計表示 (管理者のみ)
+
+---
+
+### inc/contact-logic.php - フォーム処理
+
+**セキュリティ:**
+- CSRF保護 (nonce)
+- ハニーポットスパム対策
+- レート制限 (1時間あたり5送信/IP)
+- Cloudflare/プロキシ対応IPアドレス取得
+- スパムワードフィルタリング
+- メッセージ長制限 (5000文字)
+
+**処理機能:**
+- データサニタイズ・バリデーション
+- 管理者へのメール送信
+- 自動返信メール
+- データベース保存オプション
+- カテゴリ別ルーティング
+
+**AJAX対応:**
+- 非同期送信エンドポイント
+- JSONレスポンス
+
+---
+
+## カスタム投稿タイプ
+
+### Tools (エコシステム)
+
+```php
+// URL: /tools/
+// REST API: 有効
+// サポート: title, editor, thumbnail, excerpt, custom-fields
+```
+
+ツールやサービスを紹介するためのカスタム投稿タイプ。
+
+### Contact Submissions (お問い合わせ)
+
+```php
+// 非公開 (管理者のみ)
+// お問い合わせフォーム送信の保存用
+```
+
+---
+
+## ウィジェットエリア
+
+| ID | 名称 | 配置場所 |
+|----|------|---------|
+| `sidebar-1` | サイドバー | メディアページ右側 |
+| `footer-1` | フッター左 | フッターエリア |
+| `footer-2` | フッター中央 | フッターエリア |
+| `footer-3` | フッター右 | フッターエリア |
+
+---
+
+## ナビゲーションメニュー
+
+| 位置 | 用途 |
+|------|------|
+| `primary` | メインナビゲーション |
+| `footer` | フッターリンク |
+| `mobile` | モバイル専用メニュー |
+
+---
+
+## CSS設計
+
+### CSS変数 (カスタムプロパティ)
+
+```css
+:root {
+  /* カラー */
+  --color-primary: #2563eb;
+  --color-secondary: #64748b;
+  --color-accent: #f59e0b;
+
+  /* タイポグラフィ */
+  --font-sans: 'Noto Sans JP', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* スペーシング */
+  --spacing-1: 0.25rem;
+  /* ... 13段階のスケール */
+  --spacing-13: 6rem;
+
+  /* レイアウト */
+  --max-width: 1200px;
+  --max-width-narrow: 800px;
+
+  /* シャドウ */
+  --shadow-sm: /* ... */;
+  --shadow-xl: /* ... */;
+
+  /* トランジション */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+}
+```
+
+### コンポーネント
+
+- ボタン (`.btn`, `.btn-primary`, `.btn-outline`, `.btn-ghost`)
+- アラート (`.alert-success`, `.alert-error`, etc.)
+- カード
+- グリッドシステム
+- フォーム
+- バッジ/ラベル
+- プログレスバー
+- スケルトンローダー
+
+---
+
+## JavaScript機能
+
+### 初期化される機能
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  initMobileMenu();       // モバイルメニュー
+  initSearchOverlay();    // 検索オーバーレイ
+  initBackToTop();        // トップへ戻るボタン
+  initSmoothScroll();     // スムーズスクロール
+  initTableOfContents();  // 目次自動生成
+  initShareButtons();     // シェアボタン
+  initContactForm();      // お問い合わせフォーム
+  initToolsFilter();      // ツールフィルター
+  initHeaderScroll();     // ヘッダースクロール効果
+  initCounterAnimation(); // 数字カウントアニメーション
+  initFAQAccordion();     // FAQアコーディオン
+});
+```
+
+### 主要機能
+
+| 機能 | 説明 |
+|------|------|
+| モバイルメニュー | ハンバーガーメニュー、ESCキー閉じ |
+| 検索オーバーレイ | モーダル検索、フォーカス管理 |
+| 目次生成 | H2/H3から自動生成、ジャンプリンク |
+| シェアボタン | Twitter, Facebook, はてな, URLコピー |
+| フォームバリデーション | リアルタイム検証、文字数カウンター |
+| ツールフィルター | カテゴリ別フィルタリング |
+| カウンターアニメーション | 数値の動的表示 |
+
+---
+
+## ページタイプ
+
+テーマは6種類のページタイプを自動判定:
+
+| タイプ | 判定条件 | 用途 |
+|--------|---------|------|
+| `corporate` | front-page.php | コーポレートトップ |
+| `service` | page-resumake.php | サービスLP |
+| `contact` | page-contact.php | お問い合わせ |
+| `media` | home.php, archive | メディア/ブログ |
+| `article` | single.php | 記事詳細 |
+| `ecosystem` | archive-tools.php | ツール一覧 |
+
+---
+
+## 機能一覧
+
+### パフォーマンス
+- ネイティブLazy Loading
+- アセットdefer読み込み
+- CSSプリロード
+- フォント最適化
+- クエリ文字列削除
+- 不要ヘッダー削除
+- Server Pushヘッダー
+
+### SEO
+- 完全なメタタグ生成
+- Schema.org構造化データ
+- OGPタグ
+- Twitter Card
+- パンくずスキーマ
+- 自動見出しID
+
+### セキュリティ
+- CSRF保護
+- レート制限
+- スパム対策
+- ファイルアップロード制限
+- コメントHTML制限
+- XML-RPC無効化
+- REST API制限
+- セキュリティヘッダー
+- ログイン試行制限
+
+### UX
+- スムーズスクロール
+- モバイルレスポンシブ
+- ハンバーガーメニュー
+- 検索オーバーレイ
+- トップへ戻るボタン
+- シェアボタン
+- 読了プログレスバー
+- 目次自動生成
+- 関連記事
+- 人気記事ウィジェット
+- アクセシビリティ対応
+
+### 収益化
+- 11個の収益化ショートコード
+- アフィリエイト商品ボックス
+- 商品比較表
+- CTA自動挿入
+- 投稿別CTA制御
+- 複数CTAスタイル
+
+---
+
+## 日本語対応
+
+- 全文字列は `__()` / `esc_html__()` で翻訳対応
+- テキストドメイン: `pout-theme`
+- 日本語デフォルトコンテンツ
+- 日本語日付フォーマット
+- 日本語文字数ベースの読了時間計算 (600文字/分)
+
+---
+
+## 動作要件
+
+- WordPress 6.0以上
+- PHP 8.0以上
+- MySQL 5.7以上 または MariaDB 10.3以上
+
+---
+
+## ライセンス
+
+GNU General Public License v2 or later
