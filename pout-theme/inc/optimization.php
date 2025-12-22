@@ -56,8 +56,14 @@ add_action('init', 'pout_remove_unnecessary_headers');
 
 /**
  * クエリストリングを削除
+ * 注意: 管理画面では無効化（Gutenbergエディタのキャッシュ管理を妨げないため）
  */
 function pout_remove_query_strings($src) {
+    // 管理画面では無効化
+    if (is_admin()) {
+        return $src;
+    }
+
     if (strpos($src, '?ver=')) {
         $src = remove_query_arg('ver', $src);
     }
@@ -80,10 +86,28 @@ function pout_move_jquery_to_footer() {
 
 /**
  * 不要なスクリプト・スタイルの遅延読み込み
+ * 注意: 管理画面とGutenbergエディタでは無効化
  */
 function pout_defer_scripts($tag, $handle, $src) {
+    // 管理画面では無効化（Gutenbergエディタの動作を妨げないため）
+    if (is_admin()) {
+        return $tag;
+    }
+
     // 除外するスクリプト
-    $exclude = array('jquery', 'jquery-core', 'jquery-migrate');
+    $exclude = array(
+        'jquery',
+        'jquery-core',
+        'jquery-migrate',
+        'wp-blocks',
+        'wp-editor',
+        'wp-element',
+        'wp-components',
+        'wp-data',
+        'wp-api-fetch',
+        'wp-block-editor',
+        'wp-edit-post',
+    );
 
     if (in_array($handle, $exclude)) {
         return $tag;
