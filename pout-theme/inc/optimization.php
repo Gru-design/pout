@@ -746,3 +746,177 @@ HTACCESS;
     return $webp_rules . $rules;
 }
 // add_filter('mod_rewrite_rules', 'pout_webp_htaccess_rules');
+
+/**
+ * ========================================
+ * ローカルフォントホスティング
+ * ========================================
+ */
+
+/**
+ * ローカルフォント設定をカスタマイザーに追加
+ */
+function pout_local_fonts_customizer($wp_customize) {
+    $wp_customize->add_section('pout_fonts', array(
+        'title'    => __('フォント設定', 'pout-theme'),
+        'priority' => 45,
+    ));
+
+    // ローカルフォント有効化
+    $wp_customize->add_setting('pout_local_fonts_enabled', array(
+        'default'           => false,
+        'sanitize_callback' => 'wp_validate_boolean',
+    ));
+    $wp_customize->add_control('pout_local_fonts_enabled', array(
+        'label'       => __('ローカルフォントを使用', 'pout-theme'),
+        'description' => __('Google FontsをローカルにホストしてGDPR対応＆高速化', 'pout-theme'),
+        'section'     => 'pout_fonts',
+        'type'        => 'checkbox',
+    ));
+
+    // 日本語フォント選択
+    $wp_customize->add_setting('pout_japanese_font', array(
+        'default'           => 'noto-sans-jp',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control('pout_japanese_font', array(
+        'label'   => __('日本語フォント', 'pout-theme'),
+        'section' => 'pout_fonts',
+        'type'    => 'select',
+        'choices' => array(
+            'noto-sans-jp' => 'Noto Sans JP',
+            'zen-kaku-gothic' => 'Zen Kaku Gothic New',
+            'system' => 'システムフォント',
+        ),
+    ));
+}
+add_action('customize_register', 'pout_local_fonts_customizer');
+
+/**
+ * ローカルフォントディレクトリを取得
+ */
+function pout_get_fonts_dir() {
+    return get_template_directory() . '/assets/fonts';
+}
+
+function pout_get_fonts_url() {
+    return get_template_directory_uri() . '/assets/fonts';
+}
+
+/**
+ * ローカルフォントのCSSを出力
+ */
+function pout_local_fonts_css() {
+    if (!get_theme_mod('pout_local_fonts_enabled', false)) {
+        return;
+    }
+
+    $font = get_theme_mod('pout_japanese_font', 'noto-sans-jp');
+    $fonts_url = pout_get_fonts_url();
+
+    if ($font === 'system') {
+        ?>
+        <style id="pout-local-fonts">
+        :root {
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", Meiryo, sans-serif;
+        }
+        </style>
+        <?php
+        return;
+    }
+
+    $font_faces = array(
+        'noto-sans-jp' => array(
+            'family' => 'Noto Sans JP',
+            'weights' => array(400, 500, 700),
+            'file_prefix' => 'NotoSansJP',
+        ),
+        'zen-kaku-gothic' => array(
+            'family' => 'Zen Kaku Gothic New',
+            'weights' => array(400, 500, 700),
+            'file_prefix' => 'ZenKakuGothicNew',
+        ),
+    );
+
+    if (!isset($font_faces[$font])) {
+        return;
+    }
+
+    $font_config = $font_faces[$font];
+    ?>
+    <style id="pout-local-fonts">
+    <?php foreach ($font_config['weights'] as $weight) : ?>
+    @font-face {
+        font-family: '<?php echo esc_attr($font_config['family']); ?>';
+        font-style: normal;
+        font-weight: <?php echo intval($weight); ?>;
+        font-display: swap;
+        src: url('<?php echo esc_url($fonts_url . '/' . $font_config['file_prefix'] . '-' . $weight . '.woff2'); ?>') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-9FFF, U+FF00-FFEF;
+    }
+    <?php endforeach; ?>
+    :root {
+        --font-sans: '<?php echo esc_attr($font_config['family']); ?>', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    </style>
+    <?php
+}
+add_action('wp_head', 'pout_local_fonts_css', 2);
+
+/**
+ * ローカルフォント使用時はGoogle Fontsを読み込まない
+ */
+function pout_disable_google_fonts_preconnect() {
+    if (get_theme_mod('pout_local_fonts_enabled', false)) {
+        // pout_preload_fonts の preconnect を無効化
+        remove_action('wp_head', 'pout_preload_fonts', 1);
+    }
+}
+add_action('init', 'pout_disable_google_fonts_preconnect');
+
+/**
+ * Google Fontsをローカルにダウンロード（管理画面用）
+ */
+function pout_download_google_fonts() {
+    if (!current_user_can('manage_options')) {
+        wp_die(__('権限がありません。', 'pout-theme'));
+    }
+
+    check_admin_referer('pout_download_fonts');
+
+    $fonts_dir = pout_get_fonts_dir();
+
+    // フォントディレクトリを作成
+    if (!file_exists($fonts_dir)) {
+        wp_mkdir_p($fonts_dir);
+    }
+
+    // Noto Sans JP のダウンロードURL（Google Fonts API）
+    $font_urls = array(
+        'NotoSansJP-400.woff2' => 'https://fonts.gstatic.com/s/notosansjp/v52/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEj75vY0rw-oME.woff2',
+        'NotoSansJP-500.woff2' => 'https://fonts.gstatic.com/s/notosansjp/v52/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFCsj75vY0rw-oME.woff2',
+        'NotoSansJP-700.woff2' => 'https://fonts.gstatic.com/s/notosansjp/v52/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFJQg75vY0rw-oME.woff2',
+    );
+
+    $downloaded = 0;
+    foreach ($font_urls as $filename => $url) {
+        $file_path = $fonts_dir . '/' . $filename;
+
+        if (file_exists($file_path)) {
+            continue;
+        }
+
+        $response = wp_remote_get($url, array('timeout' => 30));
+
+        if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+            file_put_contents($file_path, wp_remote_retrieve_body($response));
+            $downloaded++;
+        }
+    }
+
+    wp_redirect(add_query_arg(array(
+        'page' => 'pout-settings',
+        'fonts_downloaded' => $downloaded,
+    ), admin_url('themes.php')));
+    exit;
+}

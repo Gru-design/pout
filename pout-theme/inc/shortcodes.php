@@ -690,3 +690,374 @@ function pout_shortcodes_styles() {
     <?php
 }
 add_action('wp_head', 'pout_shortcodes_styles');
+
+/**
+ * ========================================
+ * スカーシティマーケティング（カウントダウン）
+ * ========================================
+ */
+
+/**
+ * カウントダウンタイマーショートコード
+ *
+ * [pout_countdown date="2025-12-31 23:59:59" title="キャンペーン終了まで" expired_text="キャンペーンは終了しました" style="default"]
+ */
+function pout_countdown_shortcode($atts) {
+    static $countdown_id = 0;
+    $countdown_id++;
+
+    $atts = shortcode_atts(array(
+        'date'         => '',
+        'title'        => __('終了まで', 'pout-theme'),
+        'expired_text' => __('このキャンペーンは終了しました', 'pout-theme'),
+        'style'        => 'default', // default, minimal, urgent
+        'timezone'     => 'Asia/Tokyo',
+    ), $atts, 'pout_countdown');
+
+    if (empty($atts['date'])) {
+        return '';
+    }
+
+    $target_date = strtotime($atts['date']);
+    if (!$target_date) {
+        return '';
+    }
+
+    // JavaScript用にISO形式で渡す
+    $iso_date = date('c', $target_date);
+
+    ob_start();
+    ?>
+    <div class="countdown-timer countdown-timer--<?php echo esc_attr($atts['style']); ?>"
+         id="countdown-<?php echo esc_attr($countdown_id); ?>"
+         data-target="<?php echo esc_attr($iso_date); ?>"
+         data-expired-text="<?php echo esc_attr($atts['expired_text']); ?>">
+        <?php if ($atts['title']) : ?>
+        <div class="countdown-title"><?php echo esc_html($atts['title']); ?></div>
+        <?php endif; ?>
+        <div class="countdown-display">
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="days">--</span>
+                <span class="countdown-label"><?php esc_html_e('日', 'pout-theme'); ?></span>
+            </div>
+            <div class="countdown-separator">:</div>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="hours">--</span>
+                <span class="countdown-label"><?php esc_html_e('時間', 'pout-theme'); ?></span>
+            </div>
+            <div class="countdown-separator">:</div>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="minutes">--</span>
+                <span class="countdown-label"><?php esc_html_e('分', 'pout-theme'); ?></span>
+            </div>
+            <div class="countdown-separator">:</div>
+            <div class="countdown-unit">
+                <span class="countdown-value" data-unit="seconds">--</span>
+                <span class="countdown-label"><?php esc_html_e('秒', 'pout-theme'); ?></span>
+            </div>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('pout_countdown', 'pout_countdown_shortcode');
+
+/**
+ * 期間限定バッジショートコード
+ *
+ * [pout_limited_badge text="期間限定" end_date="2025-12-31"]
+ */
+function pout_limited_badge_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'text'      => __('期間限定', 'pout-theme'),
+        'end_date'  => '',
+        'style'     => 'default', // default, urgent, premium
+    ), $atts, 'pout_limited_badge');
+
+    // 終了日が設定されていて、過ぎている場合は表示しない
+    if ($atts['end_date']) {
+        $end_time = strtotime($atts['end_date']);
+        if ($end_time && time() > $end_time) {
+            return '';
+        }
+    }
+
+    return sprintf(
+        '<span class="limited-badge limited-badge--%s">%s</span>',
+        esc_attr($atts['style']),
+        esc_html($atts['text'])
+    );
+}
+add_shortcode('pout_limited_badge', 'pout_limited_badge_shortcode');
+
+/**
+ * 残り在庫表示ショートコード
+ *
+ * [pout_stock current="3" total="10" text="残りわずか"]
+ */
+function pout_stock_shortcode($atts) {
+    $atts = shortcode_atts(array(
+        'current' => 0,
+        'total'   => 10,
+        'text'    => '',
+        'style'   => 'default', // default, bar
+    ), $atts, 'pout_stock');
+
+    $current = intval($atts['current']);
+    $total = intval($atts['total']);
+    $percentage = $total > 0 ? (($total - $current) / $total) * 100 : 0;
+
+    // 在庫なしの場合
+    if ($current <= 0) {
+        return '<div class="stock-indicator stock-indicator--sold-out">' . __('売り切れ', 'pout-theme') . '</div>';
+    }
+
+    $text = $atts['text'];
+    if (!$text) {
+        if ($current <= 3) {
+            $text = sprintf(__('残り%d個', 'pout-theme'), $current);
+        } else {
+            $text = sprintf(__('在庫あり（%d個）', 'pout-theme'), $current);
+        }
+    }
+
+    $urgency_class = '';
+    if ($current <= 3) {
+        $urgency_class = ' stock-indicator--urgent';
+    } elseif ($current <= 10) {
+        $urgency_class = ' stock-indicator--limited';
+    }
+
+    ob_start();
+    ?>
+    <div class="stock-indicator stock-indicator--<?php echo esc_attr($atts['style']); ?><?php echo esc_attr($urgency_class); ?>">
+        <?php if ($atts['style'] === 'bar') : ?>
+        <div class="stock-bar">
+            <div class="stock-bar-fill" style="width: <?php echo esc_attr($percentage); ?>%"></div>
+        </div>
+        <?php endif; ?>
+        <span class="stock-text"><?php echo esc_html($text); ?></span>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('pout_stock', 'pout_stock_shortcode');
+
+/**
+ * カウントダウン/スカーシティ用スタイル
+ */
+function pout_scarcity_styles() {
+    ?>
+    <style>
+    /* カウントダウンタイマー */
+    .countdown-timer {
+        text-align: center;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: #fff;
+        border-radius: 0.75rem;
+        margin: 1.5rem 0;
+    }
+    .countdown-timer--minimal {
+        background: #f8fafc;
+        color: #1e293b;
+        border: 1px solid #e2e8f0;
+    }
+    .countdown-timer--urgent {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        animation: pulse-urgent 2s infinite;
+    }
+    @keyframes pulse-urgent {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+        50% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+    }
+    .countdown-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        opacity: 0.9;
+    }
+    .countdown-display {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .countdown-unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 3.5rem;
+    }
+    .countdown-value {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+    }
+    .countdown-label {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        margin-top: 0.25rem;
+    }
+    .countdown-separator {
+        font-size: 1.5rem;
+        font-weight: 700;
+        opacity: 0.5;
+    }
+    .countdown-expired {
+        font-size: 1rem;
+        padding: 1rem;
+        opacity: 0.8;
+    }
+
+    /* 期間限定バッジ */
+    .limited-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 9999px;
+        background: #f59e0b;
+        color: #fff;
+    }
+    .limited-badge--urgent {
+        background: #dc2626;
+        animation: flash 1s infinite;
+    }
+    @keyframes flash {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    .limited-badge--premium {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    }
+
+    /* 在庫表示 */
+    .stock-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: #f1f5f9;
+        border-radius: 0.5rem;
+        margin: 0.5rem 0;
+    }
+    .stock-indicator--limited {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    .stock-indicator--urgent {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    .stock-indicator--sold-out {
+        background: #e2e8f0;
+        color: #64748b;
+        text-decoration: line-through;
+    }
+    .stock-bar {
+        width: 100px;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .stock-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #dc2626 0%, #f59e0b 50%, #22c55e 100%);
+        transition: width 0.3s ease;
+    }
+
+    /* ダークモード */
+    [data-theme="dark"] .countdown-timer--minimal {
+        background: #1e293b;
+        color: #f1f5f9;
+        border-color: #334155;
+    }
+    [data-theme="dark"] .stock-indicator {
+        background: #334155;
+        color: #e2e8f0;
+    }
+    [data-theme="dark"] .stock-indicator--limited {
+        background: #422006;
+        color: #fcd34d;
+    }
+    [data-theme="dark"] .stock-indicator--urgent {
+        background: #450a0a;
+        color: #fca5a5;
+    }
+
+    @media (max-width: 480px) {
+        .countdown-value {
+            font-size: 1.5rem;
+        }
+        .countdown-unit {
+            min-width: 2.5rem;
+        }
+    }
+    </style>
+    <?php
+}
+add_action('wp_head', 'pout_scarcity_styles');
+
+/**
+ * カウントダウンJavaScript
+ */
+function pout_countdown_script() {
+    ?>
+    <script>
+    (function() {
+        function initCountdowns() {
+            const countdowns = document.querySelectorAll('.countdown-timer[data-target]');
+
+            countdowns.forEach(function(el) {
+                const target = new Date(el.dataset.target).getTime();
+                const expiredText = el.dataset.expiredText || 'Expired';
+
+                function update() {
+                    const now = Date.now();
+                    const diff = target - now;
+
+                    if (diff <= 0) {
+                        el.innerHTML = '<div class="countdown-expired">' + expiredText + '</div>';
+                        return;
+                    }
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    const daysEl = el.querySelector('[data-unit="days"]');
+                    const hoursEl = el.querySelector('[data-unit="hours"]');
+                    const minutesEl = el.querySelector('[data-unit="minutes"]');
+                    const secondsEl = el.querySelector('[data-unit="seconds"]');
+
+                    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+                    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+                    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+                    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+
+                    requestAnimationFrame(function() {
+                        setTimeout(update, 1000);
+                    });
+                }
+
+                update();
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCountdowns);
+        } else {
+            initCountdowns();
+        }
+    })();
+    </script>
+    <?php
+}
+add_action('wp_footer', 'pout_countdown_script');

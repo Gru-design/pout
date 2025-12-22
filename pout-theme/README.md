@@ -118,6 +118,16 @@ pout-theme/
 - Google AI Overview / 音声検索での読み上げ対象指定
 - cssSelector: `.article-title`, `.article-summary`, `.definition-box`, `.key-takeaway`
 
+**ピクセルトラッカー統合:**
+カスタマイザーから各広告プラットフォームのピクセルIDを設定可能:
+- Meta Pixel（Facebook/Instagram広告）
+- LINE Tag（LINE広告）
+- X (Twitter) Pixel
+- TikTok Pixel
+- Pinterest Tag
+- LinkedIn Insight Tag
+- コンバージョンイベント自動トラッキング対応
+
 **カスタマイザー設定:**
 - Google Analytics ID
 - GTM ID
@@ -125,6 +135,7 @@ pout-theme/
 - Twitterアカウント
 - 会社情報 (名前、電話、メール、住所)
 - SNSリンク (Twitter, Facebook, LinkedIn, YouTube, Instagram)
+- 各種ピクセルトラッカーID
 
 ---
 
@@ -145,6 +156,26 @@ pout-theme/
 | `[pout_accordion_item]` | アコーディオン項目（子） | `title` |
 | `[pout_profile]` | プロフィールカード | `name`, `image`, `bio` |
 | `[pout_posts]` | 記事一覧 | `count`, `columns` (1-4) |
+
+### スカーシティマーケティング ショートコード（inc/shortcodes.php）
+
+コンバージョン促進用のカウントダウン・在庫表示ショートコード:
+
+| ショートコード | 用途 | パラメータ例 |
+|---------------|------|-------------|
+| `[pout_countdown]` | カウントダウンタイマー | `date`, `title`, `style` (default/minimal/urgent) |
+| `[pout_limited_badge]` | 期間限定バッジ | `text`, `end_date`, `style` |
+| `[pout_stock]` | 残り在庫表示 | `current`, `total`, `style` (default/bar) |
+
+**使用例:**
+
+```
+[pout_countdown date="2025-12-31 23:59:59" title="キャンペーン終了まで" style="urgent"]
+
+[pout_limited_badge text="期間限定50%OFF" style="urgent"]
+
+[pout_stock current="3" total="100" style="bar"]
+```
 
 ### Featured Snippet最適化ショートコード（inc/seo.php）
 
@@ -215,6 +246,12 @@ Webサイトを検索結果で上位表示させるための施策です。
 - フォントプリロード
 - 画像/iframeのネイティブLazy Loading
 - HTTP/2 Server Pushヘッダー
+
+**ローカルフォントホスティング:**
+- Google Fontsをローカルから配信してGDPR対応＆高速化
+- カスタマイザーからワンクリックで有効化
+- 対応フォント: Noto Sans JP, Zen Kaku Gothic New, システムフォント
+- 外部リクエスト削減でPageSpeed向上
 
 **セキュリティ対策:**
 - セキュリティヘッダー
@@ -458,6 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
 - クエリ文字列削除
 - 不要ヘッダー削除
 - Server Pushヘッダー
+- ローカルフォントホスティング（GDPR対応）
 
 ### SEO
 - 完全なメタタグ生成
@@ -476,6 +514,13 @@ document.addEventListener('DOMContentLoaded', () => {
   - 定義ボックスショートコード
   - キーポイント/要約ショートコード
   - 比較テーブルショートコード
+- ピクセルトラッカー統合
+  - Meta Pixel (Facebook/Instagram)
+  - LINE Tag
+  - X (Twitter) Pixel
+  - TikTok Pixel
+  - Pinterest Tag
+  - LinkedIn Insight Tag
 
 ### セキュリティ
 - CSRF保護
@@ -518,12 +563,16 @@ document.addEventListener('DOMContentLoaded', () => {
 - FAQ/HowTo構造化データ
 
 ### 収益化
-- 11個の収益化ショートコード
+- 14個の収益化ショートコード
 - アフィリエイト商品ボックス
 - 商品比較表
 - CTA自動挿入
 - 投稿別CTA制御
 - 複数CTAスタイル
+- スカーシティマーケティング
+  - カウントダウンタイマー
+  - 期間限定バッジ
+  - 残り在庫表示
 
 ---
 
