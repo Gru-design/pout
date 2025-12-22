@@ -260,7 +260,8 @@ function pout_restrict_rest_api($result) {
 
     return $result;
 }
-add_filter('rest_authentication_errors', 'pout_restrict_rest_api');
+// REST API制限を一時的に無効化（Gutenbergエディタとの互換性問題の可能性）
+// add_filter('rest_authentication_errors', 'pout_restrict_rest_api');
 
 /**
  * ログイン試行を制限
