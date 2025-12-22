@@ -111,16 +111,16 @@ class Pout_Popular_Posts_Widget extends WP_Widget {
         foreach ($popular_posts as $post) {
             ?>
             <li class="popular-posts-item">
-                <span class="popular-rank"><?php echo $rank; ?></span>
-                <a href="<?php echo get_permalink($post); ?>">
+                <span class="popular-rank"><?php echo intval($rank); ?></span>
+                <a href="<?php echo esc_url(get_permalink($post)); ?>">
                     <?php if (has_post_thumbnail($post)) : ?>
                     <div class="popular-thumb">
                         <?php echo get_the_post_thumbnail($post, 'thumbnail'); ?>
                     </div>
                     <?php endif; ?>
                     <div class="popular-info">
-                        <span class="popular-title"><?php echo get_the_title($post); ?></span>
-                        <span class="popular-views"><?php echo pout_format_views(pout_get_post_views($post->ID)); ?> views</span>
+                        <span class="popular-title"><?php echo esc_html(get_the_title($post)); ?></span>
+                        <span class="popular-views"><?php echo esc_html(pout_format_views(pout_get_post_views($post->ID))); ?> views</span>
                     </div>
                 </a>
             </li>
