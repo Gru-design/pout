@@ -12,6 +12,44 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * カテゴリラベルを取得（DRY原則）
+ *
+ * @param string $category カテゴリーキー
+ * @return string カテゴリーラベル
+ */
+function pout_get_contact_category_label($category) {
+    $labels = array(
+        'medecheck'   => __('MEDECHECK（書類添削サービス）', 'pout-theme'),
+        'service'     => __('その他サービスについて', 'pout-theme'),
+        'quote'       => __('お見積り依頼', 'pout-theme'),
+        'partnership' => __('協業・提携について', 'pout-theme'),
+        'recruit'     => __('採用について', 'pout-theme'),
+        'media'       => __('取材・メディア掲載', 'pout-theme'),
+        'other'       => __('その他', 'pout-theme'),
+    );
+    return $labels[$category] ?? $category;
+}
+
+/**
+ * カテゴリ短縮ラベルを取得（管理画面用）
+ *
+ * @param string $category カテゴリーキー
+ * @return string 短縮ラベル
+ */
+function pout_get_contact_category_short_label($category) {
+    $labels = array(
+        'medecheck'   => __('MEDECHECK', 'pout-theme'),
+        'service'     => __('サービス', 'pout-theme'),
+        'quote'       => __('見積り', 'pout-theme'),
+        'partnership' => __('協業', 'pout-theme'),
+        'recruit'     => __('採用', 'pout-theme'),
+        'media'       => __('メディア', 'pout-theme'),
+        'other'       => __('その他', 'pout-theme'),
+    );
+    return $labels[$category] ?? $category;
+}
+
+/**
  * フォーム送信処理
  */
 function pout_handle_contact_form() {
@@ -81,16 +119,52 @@ function pout_handle_contact_form() {
         return;
     }
 
+    // MEDECHECK用追加データ
+    $plan = sanitize_text_field($_POST['contact_plan'] ?? '');
+    $document_types = array();
+    if (!empty($_POST['contact_document_types']) && is_array($_POST['contact_document_types'])) {
+        $allowed_types = array('resume', 'cv', 'es', 'cover');
+        foreach ($_POST['contact_document_types'] as $type) {
+            if (in_array($type, $allowed_types, true)) {
+                $document_types[] = sanitize_text_field($type);
+            }
+        }
+    }
+
     // カテゴリラベルを取得
-    $category_labels = array(
-        'service'     => __('サービスについて', 'pout-theme'),
-        'quote'       => __('お見積り依頼', 'pout-theme'),
-        'partnership' => __('協業・提携について', 'pout-theme'),
-        'recruit'     => __('採用について', 'pout-theme'),
-        'media'       => __('取材・メディア掲載', 'pout-theme'),
-        'other'       => __('その他', 'pout-theme'),
+    $category_label = pout_get_contact_category_label($category);
+
+    // プランラベルを取得
+    $plan_labels = array(
+        'light'    => __('ライトプラン', 'pout-theme'),
+        'standard' => __('スタンダードプラン', 'pout-theme'),
+        'premium'  => __('プレミアムプラン', 'pout-theme'),
+        'bundle'   => __('転職フルサポートパック', 'pout-theme'),
     );
-    $category_label = $category_labels[$category] ?? $category;
+    $plan_label = $plan_labels[$plan] ?? '';
+
+    // 書類タイプラベル
+    $doc_type_labels = array(
+        'resume' => __('履歴書', 'pout-theme'),
+        'cv'     => __('職務経歴書', 'pout-theme'),
+        'es'     => __('エントリーシート', 'pout-theme'),
+        'cover'  => __('カバーレター', 'pout-theme'),
+    );
+    $doc_types_display = array();
+    foreach ($document_types as $dt) {
+        $doc_types_display[] = $doc_type_labels[$dt] ?? $dt;
+    }
+
+    // MEDECHECK追加情報
+    $medecheck_info = '';
+    if ($category === 'medecheck') {
+        if (!empty($plan_label)) {
+            $medecheck_info .= sprintf("\n【ご希望プラン】\n%s\n", $plan_label);
+        }
+        if (!empty($doc_types_display)) {
+            $medecheck_info .= sprintf("\n【添削希望書類】\n%s\n", implode('、', $doc_types_display));
+        }
+    }
 
     // メール本文作成
     $email_body = sprintf(
@@ -113,7 +187,7 @@ function pout_handle_contact_form() {
 
 【お問い合わせ種別】
 %s
-
+%s
 【お問い合わせ内容】
 %s
 
@@ -129,6 +203,7 @@ IPアドレス: %s
         $email,
         $phone ?: '未入力',
         $category_label,
+        $medecheck_info,
         $message,
         current_time('Y-m-d H:i:s'),
         pout_get_client_ip(),
@@ -384,16 +459,8 @@ function pout_ajax_contact_form() {
         wp_send_json_error(array('message' => __('有効なメールアドレスを入力してください', 'pout-theme')));
     }
 
-    // カテゴリラベル
-    $category_labels = array(
-        'service'     => __('サービスについて', 'pout-theme'),
-        'quote'       => __('お見積り依頼', 'pout-theme'),
-        'partnership' => __('協業・提携について', 'pout-theme'),
-        'recruit'     => __('採用について', 'pout-theme'),
-        'media'       => __('取材・メディア掲載', 'pout-theme'),
-        'other'       => __('その他', 'pout-theme'),
-    );
-    $category_label = $category_labels[$category] ?? $category;
+    // カテゴリラベル（共通関数を使用）
+    $category_label = pout_get_contact_category_label($category);
 
     // メール送信
     $admin_email = get_theme_mod('pout_email', get_option('admin_email'));
@@ -447,15 +514,7 @@ function pout_contact_admin_column_content($column, $post_id) {
             break;
         case 'contact_category':
             $category = get_post_meta($post_id, '_contact_category', true);
-            $labels = array(
-                'service'     => __('サービス', 'pout-theme'),
-                'quote'       => __('見積り', 'pout-theme'),
-                'partnership' => __('協業', 'pout-theme'),
-                'recruit'     => __('採用', 'pout-theme'),
-                'media'       => __('メディア', 'pout-theme'),
-                'other'       => __('その他', 'pout-theme'),
-            );
-            echo esc_html($labels[$category] ?? $category);
+            echo esc_html(pout_get_contact_category_short_label($category));
             break;
     }
 }

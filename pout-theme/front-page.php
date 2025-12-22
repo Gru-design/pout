@@ -2,9 +2,11 @@
 /**
  * Front Page Template
  *
- * コーポレートTOP - 企業サイトのトップページ
+ * コーポレートTOP - Pout Consulting
+ * キャリア支援・書類添削サービス MEDECHECK
  *
  * @package Pout_Theme
+ * @version 2.0.0
  */
 
 if (!defined('ABSPATH')) {
@@ -14,7 +16,7 @@ if (!defined('ABSPATH')) {
 get_header();
 ?>
 
-<!-- ヒーローセクション -->
+<!-- Hero Section -->
 <section class="hero hero-corporate">
     <div class="hero-background">
         <?php if (has_post_thumbnail()) : ?>
@@ -23,227 +25,333 @@ get_header();
         <div class="hero-overlay"></div>
     </div>
     <div class="hero-content container">
+        <span class="hero-tagline"><?php esc_html_e('Career Consulting', 'pout-theme'); ?></span>
         <h1 class="hero-title">
-            <?php echo esc_html(get_theme_mod('pout_hero_title', 'ビジネスを加速する')); ?>
-            <span class="hero-title-accent">
-                <?php echo esc_html(get_theme_mod('pout_hero_title_accent', 'テクノロジーソリューション')); ?>
-            </span>
+            <?php esc_html_e('あなたのキャリアを', 'pout-theme'); ?>
+            <span class="hero-title-accent"><?php esc_html_e('次のステージへ', 'pout-theme'); ?></span>
         </h1>
         <p class="hero-description">
-            <?php echo esc_html(get_theme_mod('pout_hero_description', '私たちは最先端のテクノロジーで、お客様のビジネス課題を解決します。')); ?>
+            <?php esc_html_e('Poutは、プロのキャリアアドバイザーによる書類添削サービス「MEDECHECK」を提供しています。AIじゃない。目で、チェック。人の目で、あなたの魅力を引き出します。', 'pout-theme'); ?>
         </p>
         <div class="hero-actions">
-            <a href="<?php echo esc_url(get_theme_mod('pout_hero_cta_url', home_url('/contact/'))); ?>" class="btn btn-primary btn-lg">
-                <?php echo esc_html(get_theme_mod('pout_hero_cta_text', 'お問い合わせ')); ?>
+            <a href="<?php echo esc_url(home_url('/medecheck/')); ?>" class="btn btn-primary btn-lg">
+                <?php esc_html_e('MEDECHECKを見る', 'pout-theme'); ?>
             </a>
-            <a href="<?php echo esc_url(get_theme_mod('pout_hero_secondary_url', '#services')); ?>" class="btn btn-outline btn-lg">
-                <?php echo esc_html(get_theme_mod('pout_hero_secondary_text', 'サービスを見る')); ?>
+            <a href="<?php echo esc_url(home_url('/contact/')); ?>" class="btn btn-outline-white btn-lg">
+                <?php esc_html_e('無料相談する', 'pout-theme'); ?>
             </a>
         </div>
     </div>
-    <div class="hero-scroll-indicator">
-        <span><?php esc_html_e('Scroll', 'pout-theme'); ?></span>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <div class="hero-scroll-indicator" aria-hidden="true">
+        <span>Scroll</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 5v14M19 12l-7 7-7-7"></path>
         </svg>
     </div>
 </section>
 
-<!-- サービス紹介セクション -->
+<!-- Philosophy Section -->
+<section class="section section-philosophy">
+    <div class="container">
+        <div class="philosophy-content">
+            <div class="philosophy-text">
+                <span class="section-label"><?php esc_html_e('Our Philosophy', 'pout-theme'); ?></span>
+                <h2 class="section-title"><?php esc_html_e('私たちが大切にしていること', 'pout-theme'); ?></h2>
+                <p>
+                    <?php esc_html_e('職務経歴書は、あなたのキャリアを語る「名刺」です。AIによる自動生成が溢れる今だからこそ、私たちは「人の目」にこだわります。', 'pout-theme'); ?>
+                </p>
+                <p>
+                    <?php esc_html_e('一人ひとりの経験、想い、強みは十人十色。テンプレートでは伝わらない「あなたらしさ」を、経験豊富なキャリアアドバイザーが丁寧に引き出し、言葉にします。', 'pout-theme'); ?>
+                </p>
+            </div>
+            <div class="philosophy-quote">
+                <blockquote>
+                    <?php esc_html_e('AIじゃない。目で、チェック。', 'pout-theme'); ?>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
 <section id="services" class="section section-services">
     <div class="container">
         <header class="section-header">
             <span class="section-label"><?php esc_html_e('Services', 'pout-theme'); ?></span>
             <h2 class="section-title"><?php esc_html_e('サービス', 'pout-theme'); ?></h2>
             <p class="section-description">
-                <?php esc_html_e('お客様の課題に合わせた最適なソリューションを提供します', 'pout-theme'); ?>
+                <?php esc_html_e('キャリアのあらゆるステージでサポートします', 'pout-theme'); ?>
             </p>
         </header>
 
         <div class="services-grid">
-            <?php
-            $services = array(
-                array(
-                    'icon'        => 'code',
-                    'title'       => 'Webサービス開発',
-                    'description' => 'スケーラブルで高品質なWebアプリケーションを開発',
-                ),
-                array(
-                    'icon'        => 'smartphone',
-                    'title'       => 'モバイルアプリ開発',
-                    'description' => 'iOS/Androidネイティブ・クロスプラットフォーム対応',
-                ),
-                array(
-                    'icon'        => 'cloud',
-                    'title'       => 'クラウドインフラ',
-                    'description' => 'AWS/GCP/Azureを活用した堅牢なインフラ構築',
-                ),
-                array(
-                    'icon'        => 'brain',
-                    'title'       => 'AI/ML導入支援',
-                    'description' => '機械学習・AIを活用した業務効率化をサポート',
-                ),
-            );
-
-            foreach ($services as $index => $service) :
-            ?>
-            <article class="service-card" data-aos="fade-up" data-aos-delay="<?php echo esc_attr($index * 100); ?>">
+            <!-- MEDECHECK - Featured -->
+            <article class="service-card service-card-featured">
                 <div class="service-icon">
-                    <span class="icon icon-<?php echo esc_attr($service['icon']); ?>"></span>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14,2 14,8 20,8"></polyline>
+                        <path d="M9 15l2 2 4-4"></path>
+                    </svg>
                 </div>
-                <h3 class="service-title"><?php echo esc_html($service['title']); ?></h3>
-                <p class="service-description"><?php echo esc_html($service['description']); ?></p>
-                <a href="#" class="service-link">
+                <h3 class="service-title">MEDECHECK</h3>
+                <p class="service-description">
+                    <?php esc_html_e('職務経歴書・履歴書の添削サービス。プロの目で、あなたの魅力を最大限に引き出します。', 'pout-theme'); ?>
+                </p>
+                <a href="<?php echo esc_url(home_url('/medecheck/')); ?>" class="service-link">
                     <?php esc_html_e('詳しく見る', 'pout-theme'); ?>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14M12 5l7 7-7 7"></path>
                     </svg>
                 </a>
             </article>
-            <?php endforeach; ?>
+
+            <!-- Career Consulting -->
+            <article class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <h3 class="service-title"><?php esc_html_e('キャリア相談', 'pout-theme'); ?></h3>
+                <p class="service-description">
+                    <?php esc_html_e('転職・キャリアチェンジに関する個別相談。あなたの強みと市場価値を一緒に見つけます。', 'pout-theme'); ?>
+                </p>
+                <a href="<?php echo esc_url(home_url('/consulting/')); ?>" class="service-link">
+                    <?php esc_html_e('詳しく見る', 'pout-theme'); ?>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </article>
+
+            <!-- Interview Coaching -->
+            <article class="service-card">
+                <div class="service-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="service-title"><?php esc_html_e('面接対策', 'pout-theme'); ?></h3>
+                <p class="service-description">
+                    <?php esc_html_e('模擬面接で本番に備える。よくある質問への回答準備から、話し方のコツまでサポート。', 'pout-theme'); ?>
+                </p>
+                <a href="<?php echo esc_url(home_url('/interview/')); ?>" class="service-link">
+                    <?php esc_html_e('詳しく見る', 'pout-theme'); ?>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </article>
         </div>
     </div>
 </section>
 
-<!-- 実績・数字セクション -->
+<!-- Stats Section -->
 <section class="section section-stats">
     <div class="container">
         <div class="stats-grid">
-            <?php
-            $stats = array(
-                array('number' => '500+', 'label' => 'プロジェクト実績'),
-                array('number' => '98%', 'label' => '顧客満足度'),
-                array('number' => '50+', 'label' => '専門エンジニア'),
-                array('number' => '10年', 'label' => '業界経験'),
-            );
-
-            foreach ($stats as $stat) :
-            ?>
             <div class="stat-item">
-                <span class="stat-number" data-count="<?php echo esc_attr($stat['number']); ?>">
-                    <?php echo esc_html($stat['number']); ?>
-                </span>
-                <span class="stat-label"><?php echo esc_html($stat['label']); ?></span>
+                <span class="stat-number" data-count="3,000">3,000+</span>
+                <span class="stat-label"><?php esc_html_e('添削実績', 'pout-theme'); ?></span>
             </div>
-            <?php endforeach; ?>
+            <div class="stat-item">
+                <span class="stat-number" data-count="98">98%</span>
+                <span class="stat-label"><?php esc_html_e('満足度', 'pout-theme'); ?></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="24">24h</span>
+                <span class="stat-label"><?php esc_html_e('平均返却時間', 'pout-theme'); ?></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-count="15">15年+</span>
+                <span class="stat-label"><?php esc_html_e('業界経験', 'pout-theme'); ?></span>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- 事例セクション -->
-<section class="section section-cases">
+<!-- How It Works Section -->
+<section class="section lp-section-alt">
     <div class="container">
-        <header class="section-header">
-            <span class="section-label"><?php esc_html_e('Case Studies', 'pout-theme'); ?></span>
-            <h2 class="section-title"><?php esc_html_e('導入事例', 'pout-theme'); ?></h2>
+        <header class="lp-section-header">
+            <span class="lp-section-label"><?php esc_html_e('How It Works', 'pout-theme'); ?></span>
+            <h2 class="lp-section-title"><?php esc_html_e('ご利用の流れ', 'pout-theme'); ?></h2>
+            <p class="lp-section-description">
+                <?php esc_html_e('かんたん3ステップで添削完了', 'pout-theme'); ?>
+            </p>
         </header>
 
-        <div class="cases-slider">
+        <div class="steps-grid">
+            <div class="step-card">
+                <span class="step-number">1</span>
+                <h3 class="step-title"><?php esc_html_e('書類をアップロード', 'pout-theme'); ?></h3>
+                <p class="step-text"><?php esc_html_e('職務経歴書・履歴書をお送りください。Word、PDF、テキスト形式に対応。', 'pout-theme'); ?></p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">2</span>
+                <h3 class="step-title"><?php esc_html_e('プロが添削', 'pout-theme'); ?></h3>
+                <p class="step-text"><?php esc_html_e('経験豊富なキャリアアドバイザーが、一つひとつ丁寧にチェック・添削します。', 'pout-theme'); ?></p>
+            </div>
+            <div class="step-card">
+                <span class="step-number">3</span>
+                <h3 class="step-title"><?php esc_html_e('添削完了', 'pout-theme'); ?></h3>
+                <p class="step-text"><?php esc_html_e('添削コメント付きの書類をお届け。修正ポイントが一目でわかります。', 'pout-theme'); ?></p>
+            </div>
+        </div>
+
+        <div class="section-footer text-center" style="margin-top: var(--space-12);">
+            <a href="<?php echo esc_url(home_url('/medecheck/')); ?>" class="btn btn-primary btn-lg">
+                <?php esc_html_e('MEDECHECKを詳しく見る', 'pout-theme'); ?>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="section">
+    <div class="container">
+        <header class="section-header">
+            <span class="section-label"><?php esc_html_e('Testimonials', 'pout-theme'); ?></span>
+            <h2 class="section-title"><?php esc_html_e('ご利用者様の声', 'pout-theme'); ?></h2>
+        </header>
+
+        <div class="testimonials-grid">
+            <article class="testimonial-card">
+                <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                </div>
+                <p class="testimonial-text">
+                    <?php esc_html_e('自分では気づかなかった強みを引き出してもらえました。添削後の書類で書類選考の通過率が大幅にアップしました。', 'pout-theme'); ?>
+                </p>
+                <footer class="testimonial-author">
+                    <span class="testimonial-name"><?php esc_html_e('T.S.様', 'pout-theme'); ?></span>
+                    <span class="testimonial-role"><?php esc_html_e('30代・ITエンジニア', 'pout-theme'); ?></span>
+                </footer>
+            </article>
+
+            <article class="testimonial-card">
+                <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                </div>
+                <p class="testimonial-text">
+                    <?php esc_html_e('AIの添削も試しましたが、やはり人間ならではの細やかなアドバイスが違います。「なぜそう書くべきか」が理解できました。', 'pout-theme'); ?>
+                </p>
+                <footer class="testimonial-author">
+                    <span class="testimonial-name"><?php esc_html_e('M.K.様', 'pout-theme'); ?></span>
+                    <span class="testimonial-role"><?php esc_html_e('20代・マーケティング', 'pout-theme'); ?></span>
+                </footer>
+            </article>
+
+            <article class="testimonial-card">
+                <div class="testimonial-rating" aria-label="5 out of 5 stars">
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                    <span class="star star-filled" aria-hidden="true">&#9733;</span>
+                </div>
+                <p class="testimonial-text">
+                    <?php esc_html_e('返却が速くて助かりました。丁寧なコメントで、次回以降の自己作成にも活かせる内容でした。', 'pout-theme'); ?>
+                </p>
+                <footer class="testimonial-author">
+                    <span class="testimonial-name"><?php esc_html_e('Y.A.様', 'pout-theme'); ?></span>
+                    <span class="testimonial-role"><?php esc_html_e('40代・管理職', 'pout-theme'); ?></span>
+                </footer>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Section -->
+<section class="section section-blog lp-section-alt">
+    <div class="container">
+        <header class="section-header">
+            <span class="section-label"><?php esc_html_e('Media', 'pout-theme'); ?></span>
+            <h2 class="section-title"><?php esc_html_e('最新記事', 'pout-theme'); ?></h2>
+            <p class="section-description">
+                <?php esc_html_e('キャリアアップに役立つ情報を発信しています', 'pout-theme'); ?>
+            </p>
+        </header>
+
+        <div class="posts-grid">
             <?php
-            $cases_query = new WP_Query(array(
+            $blog_query = new WP_Query(array(
                 'post_type'      => 'post',
-                'posts_per_page' => 6,
-                'category_name'  => 'case-study',
+                'posts_per_page' => 3,
+                'post_status'    => 'publish',
             ));
 
-            if ($cases_query->have_posts()) :
-                while ($cases_query->have_posts()) : $cases_query->the_post();
+            if ($blog_query->have_posts()) :
+                while ($blog_query->have_posts()) :
+                    $blog_query->the_post();
             ?>
-            <article class="case-card">
-                <?php if (has_post_thumbnail()) : ?>
-                <div class="case-image">
-                    <?php the_post_thumbnail('pout-card'); ?>
-                </div>
-                <?php endif; ?>
-                <div class="case-content">
-                    <h3 class="case-title">
-                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                    </h3>
-                    <p class="case-excerpt"><?php echo wp_trim_words(get_the_excerpt(), 40); ?></p>
-                </div>
+            <article class="post-card">
+                <a href="<?php the_permalink(); ?>" class="post-card-link">
+                    <div class="post-card-image">
+                        <?php if (has_post_thumbnail()) : ?>
+                            <?php the_post_thumbnail('pout-card', array('loading' => 'lazy')); ?>
+                        <?php else : ?>
+                            <div class="post-card-image-placeholder">Pout</div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-meta">
+                            <?php
+                            $categories = get_the_category();
+                            if (!empty($categories)) :
+                            ?>
+                            <span class="post-category"><?php echo esc_html($categories[0]->name); ?></span>
+                            <?php endif; ?>
+                            <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date()); ?></time>
+                        </div>
+                        <h3 class="post-card-title"><?php the_title(); ?></h3>
+                        <p class="post-card-excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 40, '...')); ?></p>
+                    </div>
+                </a>
             </article>
             <?php
                 endwhile;
                 wp_reset_postdata();
             else :
             ?>
-            <p class="no-cases"><?php esc_html_e('事例が見つかりませんでした', 'pout-theme'); ?></p>
+            <p class="text-center"><?php esc_html_e('記事が見つかりませんでした', 'pout-theme'); ?></p>
             <?php endif; ?>
         </div>
-    </div>
-</section>
 
-<!-- ブログセクション -->
-<section class="section section-blog">
-    <div class="container">
-        <header class="section-header">
-            <span class="section-label"><?php esc_html_e('Blog', 'pout-theme'); ?></span>
-            <h2 class="section-title"><?php esc_html_e('最新記事', 'pout-theme'); ?></h2>
-        </header>
-
-        <div class="blog-grid">
-            <?php
-            $blog_query = new WP_Query(array(
-                'post_type'      => 'post',
-                'posts_per_page' => 3,
-            ));
-
-            if ($blog_query->have_posts()) :
-                while ($blog_query->have_posts()) : $blog_query->the_post();
-            ?>
-            <article class="blog-card">
-                <?php if (has_post_thumbnail()) : ?>
-                <a href="<?php the_permalink(); ?>" class="blog-image">
-                    <?php the_post_thumbnail('pout-card'); ?>
-                </a>
-                <?php endif; ?>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <time datetime="<?php echo get_the_date('c'); ?>"><?php echo get_the_date(); ?></time>
-                        <?php
-                        $categories = get_the_category();
-                        if ($categories) :
-                        ?>
-                        <span class="blog-category"><?php echo esc_html($categories[0]->name); ?></span>
-                        <?php endif; ?>
-                    </div>
-                    <h3 class="blog-title">
-                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                    </h3>
-                </div>
-            </article>
-            <?php
-                endwhile;
-                wp_reset_postdata();
-            endif;
-            ?>
-        </div>
-
-        <div class="section-footer">
-            <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>" class="btn btn-outline">
+        <div class="section-footer text-center" style="margin-top: var(--space-10);">
+            <a href="<?php echo esc_url(home_url('/blog/')); ?>" class="btn btn-outline">
                 <?php esc_html_e('記事一覧を見る', 'pout-theme'); ?>
             </a>
         </div>
     </div>
 </section>
 
-<!-- CTAセクション -->
+<!-- CTA Section -->
 <section class="section section-cta">
     <div class="container">
         <div class="cta-box">
-            <h2 class="cta-title"><?php esc_html_e('プロジェクトのご相談はこちら', 'pout-theme'); ?></h2>
+            <h2 class="cta-title"><?php esc_html_e('あなたの書類、プロにチェックしてもらいませんか？', 'pout-theme'); ?></h2>
             <p class="cta-description">
-                <?php esc_html_e('お気軽にお問い合わせください。専門スタッフが丁寧にご対応いたします。', 'pout-theme'); ?>
+                <?php esc_html_e('MEDECHECKなら、経験豊富なキャリアアドバイザーが丁寧に添削。初回限定で無料相談も実施中です。', 'pout-theme'); ?>
             </p>
             <div class="cta-actions">
-                <a href="<?php echo esc_url(home_url('/contact/')); ?>" class="btn btn-primary btn-lg">
-                    <?php esc_html_e('無料相談する', 'pout-theme'); ?>
+                <a href="<?php echo esc_url(home_url('/medecheck/')); ?>" class="btn btn-primary btn-lg">
+                    <?php esc_html_e('MEDECHECKを試す', 'pout-theme'); ?>
                 </a>
-                <a href="tel:<?php echo esc_attr(get_theme_mod('pout_phone', '')); ?>" class="btn btn-outline btn-lg">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
-                    </svg>
-                    <?php echo esc_html(get_theme_mod('pout_phone', '03-XXXX-XXXX')); ?>
+                <a href="<?php echo esc_url(home_url('/contact/')); ?>" class="btn btn-outline-gold btn-lg">
+                    <?php esc_html_e('無料相談する', 'pout-theme'); ?>
                 </a>
             </div>
         </div>
