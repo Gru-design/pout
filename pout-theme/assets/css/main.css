@@ -3710,3 +3710,558 @@ small {
         font-size: 90%;
     }
 }
+
+/* ==========================================================================
+   Pout.Lab Specific Styles
+   履歴書・職務経歴書添削の研究所
+   ========================================================================== */
+
+/* Site Title - Lab Style */
+.site-title-main {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.site-title-dot {
+    color: var(--color-primary);
+}
+
+/* Hero Lab Style */
+.hero-lab {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 1;
+}
+
+.hero-lab .hero-overlay {
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(15, 23, 42, 0.8) 100%);
+    z-index: 2;
+}
+
+.hero-lab .hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding-top: calc(var(--header-height) + var(--space-16));
+    padding-bottom: var(--space-16);
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: rgba(37, 99, 235, 0.2);
+    border: 1px solid rgba(37, 99, 235, 0.4);
+    padding: var(--space-2) var(--space-4);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #93c5fd;
+    margin-bottom: var(--space-6);
+}
+
+.badge-icon {
+    display: flex;
+    color: #10b981;
+}
+
+.hero-lab .hero-title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+}
+
+.hero-title-sub {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.hero-title-main {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.hero-title-lab {
+    display: block;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 600;
+    color: #94a3b8;
+    margin-top: var(--space-2);
+}
+
+.hero-title-lab .dot {
+    color: var(--color-primary);
+}
+
+.hero-lab .hero-description {
+    max-width: 700px;
+    margin: 0 auto var(--space-8);
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.8;
+}
+
+.hero-trust {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-6);
+    margin-top: var(--space-10);
+    padding-top: var(--space-8);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trust-item {
+    text-align: center;
+}
+
+.trust-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.trust-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: var(--space-1);
+}
+
+.trust-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Philosophy Lab Section */
+.section-philosophy-lab {
+    padding: var(--space-20) 0;
+}
+
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+}
+
+.section-title-large {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: var(--space-6);
+}
+
+.philosophy-quote-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+    border-left: 4px solid var(--color-primary);
+}
+
+.philosophy-quote-box blockquote {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.philosophy-text {
+    color: var(--color-text-light);
+    line-height: 1.8;
+    margin-bottom: var(--space-4);
+}
+
+.philosophy-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+}
+
+.stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: var(--radius-full);
+    color: var(--color-primary);
+    margin-bottom: var(--space-3);
+}
+
+.stat-card .stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-text);
+    line-height: 1;
+}
+
+.stat-unit {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.stat-card .stat-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: var(--space-2);
+}
+
+.stat-note {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    margin-top: var(--space-1);
+}
+
+/* Services Lab Section */
+.section-services-lab {
+    background: var(--color-bg-secondary);
+    padding: var(--space-20) 0;
+}
+
+.services-grid-lab {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-6);
+}
+
+.service-card-lab {
+    background: #fff;
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    position: relative;
+    transition: all var(--transition-base);
+    border: 1px solid var(--color-border);
+}
+
+.service-card-lab:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.service-card-lab.service-featured {
+    grid-row: span 2;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    border: none;
+}
+
+.service-card-lab.service-featured .service-title,
+.service-card-lab.service-featured .service-subtitle,
+.service-card-lab.service-featured .service-description {
+    color: #fff;
+}
+
+.service-card-lab.service-featured .service-icon {
+    color: #93c5fd;
+}
+
+.service-card-lab.service-featured .service-features {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.service-badge {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    background: var(--color-gold);
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 9999px;
+}
+
+.service-card-lab .service-icon {
+    margin-bottom: var(--space-4);
+    color: var(--color-primary);
+}
+
+.service-icon-secondary {
+    color: var(--color-secondary) !important;
+}
+
+.service-card-lab .service-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+}
+
+.service-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin-bottom: var(--space-4);
+}
+
+.service-card-lab .service-description {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+}
+
+.service-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-6);
+}
+
+.service-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+    font-size: 0.875rem;
+}
+
+.service-features li::before {
+    content: '✓';
+    color: #10b981;
+    font-weight: bold;
+}
+
+/* Insights Section */
+.section-insights {
+    padding: var(--space-20) 0;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.insight-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    transition: all var(--transition-base);
+}
+
+.insight-card:hover {
+    border-color: var(--color-primary);
+}
+
+.insight-number {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--space-4);
+}
+
+.insight-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+}
+
+.insight-text {
+    color: var(--color-text-light);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Partners Section */
+.section-partners {
+    padding: var(--space-16) 0;
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+}
+
+.partner-card {
+    display: block;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    transition: all var(--transition-base);
+    text-decoration: none;
+}
+
+.partner-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.partner-category {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: rgba(37, 99, 235, 0.1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-3);
+}
+
+.partner-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+}
+
+.partner-description {
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+}
+
+.partner-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* CTA Lab Section */
+.section-cta-lab {
+    padding: var(--space-16) 0;
+}
+
+.cta-box-lab {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-16) var(--space-8);
+    text-align: center;
+    color: #fff;
+}
+
+.cta-badge {
+    display: inline-block;
+    background: rgba(37, 99, 235, 0.2);
+    border: 1px solid rgba(37, 99, 235, 0.4);
+    padding: var(--space-2) var(--space-4);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: #93c5fd;
+    margin-bottom: var(--space-4);
+}
+
+.cta-box-lab .cta-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+}
+
+.cta-box-lab .cta-description {
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto var(--space-8);
+    line-height: 1.7;
+}
+
+/* Footer Lab Style */
+.footer-logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.footer-logo-dot {
+    color: var(--color-primary);
+}
+
+.footer-tagline {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--space-3);
+}
+
+/* Responsive for Lab Styles */
+@media (max-width: 1024px) {
+    .philosophy-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+
+    .philosophy-stats {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .stat-card {
+        flex: 1 1 calc(33.333% - var(--space-4));
+        min-width: 200px;
+    }
+
+    .services-grid-lab {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card-lab.service-featured {
+        grid-row: auto;
+    }
+
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .partners-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-trust {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+
+    .trust-divider {
+        display: none;
+    }
+
+    .stat-card {
+        flex: 1 1 100%;
+    }
+
+    .philosophy-stats {
+        gap: var(--space-3);
+    }
+}

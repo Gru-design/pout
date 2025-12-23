@@ -3,10 +3,10 @@
  * Header Template
  *
  * サイトヘッダー、ナビゲーション、モバイルメニュー
- * Pout Consulting / MEDECHECK
+ * Pout.Lab - 履歴書・職務経歴書添削の研究所
  *
  * @package Pout_Theme
- * @version 2.0.0
+ * @version 3.0.0
  */
 
 if (!defined('ABSPATH')) {
@@ -52,7 +52,7 @@ $header_class = ($is_front_page || $is_lp_page) ? 'header-transparent' : '';
                     <?php the_custom_logo(); ?>
                 <?php else : ?>
                     <a href="<?php echo esc_url(home_url('/')); ?>" class="site-title" rel="home">
-                        Pout
+                        <span class="site-title-main">Pout<span class="site-title-dot">.</span>Lab</span>
                     </a>
                 <?php endif; ?>
             </div>
@@ -72,9 +72,9 @@ $header_class = ($is_front_page || $is_lp_page) ? 'header-transparent' : '';
                     ?>
                     <ul class="primary-menu">
                         <li><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('ホーム', 'pout-theme'); ?></a></li>
-                        <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><?php esc_html_e('私たちについて', 'pout-theme'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><?php esc_html_e('研究所について', 'pout-theme'); ?></a></li>
                         <li><a href="<?php echo esc_url(home_url('/medecheck/')); ?>">MEDECHECK</a></li>
-                        <li><a href="<?php echo esc_url(home_url('/blog/')); ?>"><?php esc_html_e('メディア', 'pout-theme'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/blog/')); ?>"><?php esc_html_e('リサーチ', 'pout-theme'); ?></a></li>
                         <li><a href="<?php echo esc_url(home_url('/contact/')); ?>"><?php esc_html_e('お問い合わせ', 'pout-theme'); ?></a></li>
                     </ul>
                     <?php
@@ -93,8 +93,8 @@ $header_class = ($is_front_page || $is_lp_page) ? 'header-transparent' : '';
                 </button>
 
                 <!-- CTA Button (Desktop) -->
-                <a href="<?php echo esc_url(home_url('/contact/')); ?>" class="btn btn-primary btn-header">
-                    <?php esc_html_e('お問い合わせ', 'pout-theme'); ?>
+                <a href="<?php echo esc_url(home_url('/medecheck/')); ?>" class="btn btn-primary btn-header">
+                    <?php esc_html_e('添削を依頼', 'pout-theme'); ?>
                 </a>
 
                 <!-- Mobile Menu Toggle -->
@@ -125,16 +125,16 @@ $header_class = ($is_front_page || $is_lp_page) ? 'header-transparent' : '';
             ?>
             <ul class="mobile-menu-list">
                 <li><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('ホーム', 'pout-theme'); ?></a></li>
-                <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><?php esc_html_e('私たちについて', 'pout-theme'); ?></a></li>
+                <li><a href="<?php echo esc_url(home_url('/about/')); ?>"><?php esc_html_e('研究所について', 'pout-theme'); ?></a></li>
                 <li><a href="<?php echo esc_url(home_url('/medecheck/')); ?>">MEDECHECK</a></li>
-                <li><a href="<?php echo esc_url(home_url('/blog/')); ?>"><?php esc_html_e('メディア', 'pout-theme'); ?></a></li>
+                <li><a href="<?php echo esc_url(home_url('/blog/')); ?>"><?php esc_html_e('リサーチ', 'pout-theme'); ?></a></li>
                 <li><a href="<?php echo esc_url(home_url('/contact/')); ?>"><?php esc_html_e('お問い合わせ', 'pout-theme'); ?></a></li>
             </ul>
             <?php
         }
         ?>
         <a href="<?php echo esc_url(home_url('/medecheck/')); ?>" class="btn btn-primary btn-lg btn-mobile-cta">
-            <?php esc_html_e('MEDECHECKを試す', 'pout-theme'); ?>
+            <?php esc_html_e('添削を依頼する', 'pout-theme'); ?>
         </a>
     </div>
 </nav>
